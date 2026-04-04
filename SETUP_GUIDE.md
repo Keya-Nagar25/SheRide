@@ -1,4 +1,4 @@
-# 🌸 SheRide — Complete Setup Guide
+# SheRide — Complete Setup Guide
 ### MERN Stack: MongoDB + Express.js + React.js + Node.js
 
 ---
