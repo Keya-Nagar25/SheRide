@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="theme-color" content="#000000" />
+    <title>SheRide 🌸</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <!--
+      Google Maps API — key is set below.
+      APIs to enable in Google Cloud Console:
+        ✅ Maps JavaScript API
+        ✅ Directions API
+        ✅ Geocoding API
+        ✅ Places API
+    -->
+    <script>
+      // This loads Google Maps and signals React when it is ready
+      window.googleMapsReady = false;
+      function onGoogleMapsLoaded() {
+        window.googleMapsReady = true;
+        window.dispatchEvent(new Event('google-maps-ready'));
+      }
+    </script>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAJkviHbZq-qThCsvVs5iolpR04-THfstc&libraries=places,geometry&callback=onGoogleMapsLoaded"
+      async
+      defer
+    ></script>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run SheRide.</noscript>
+    <div id="root"></div>
+  </body>
+</html>
