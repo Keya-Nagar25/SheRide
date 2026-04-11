@@ -264,3 +264,27 @@ router.post('/logout', (req, res) => {
 
 module.exports = router;
 
+
+// ============================================
+// POST /api/auth/validate-otp
+// Validates OTP for new driver registration (step 1 → step 2 gate)
+// Does NOT consume/delete the OTP — that happens at /register/driver
+// ============================================
+router.post('/validate-otp', async (req, res) => {
+  try {
+    const { phone, otp } = req.body;
+    if (!phone || !otp) return res.status(400).json({ message: 'Phone and OTP required' });
+
+    const pending = await PendingOTP.findOne({ phone });
+    if (!pending) return res.status(400).json({ message: 'No OTP found. Please request a new one.' });
+    if (pending.otp !== otp) return res.status(400).json({ message: 'Invalid OTP. Please try again.' });
+    if (pending.expiresAt < Date.now()) {
+      await PendingOTP.deleteOne({ _id: pending._id });
+      return res.status(400).json({ message: 'OTP expired. Please request a new one.' });
+    }
+
+    res.json({ message: 'OTP verified' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
