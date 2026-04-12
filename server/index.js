@@ -25,16 +25,22 @@ const initSocket = require('./sockets');
 const app = express();
 const server = http.createServer(app);
 
+// ---- Allowed frontend origins (run 2 clients for passenger + driver) ----
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:3001',
+];
+
 // ---- Socket.io setup ----
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || 'http://localhost:3000',
+    origin: allowedOrigins,
     methods: ['GET', 'POST'],
   },
 });
 
 // ---- Middleware ----
-app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:3000' }));
+app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

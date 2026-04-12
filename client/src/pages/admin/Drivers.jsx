@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 import api from '../../services/api';
 
 export default function AdminDrivers() {
-  const [drivers, setDrivers]   = useState([]);
-  const [filter, setFilter]     = useState('pending');
-  const [loading, setLoading]   = useState(true);
-  const [acting, setActing]     = useState('');   // driverId being actioned
+  const [drivers, setDrivers] = useState([]);
+  const [filter, setFilter] = useState('pending');
+  const [loading, setLoading] = useState(true);
+  const [acting, setActing] = useState('');   // driverId being actioned
   const [rejectReason, setRejectReason] = useState('');
   const [rejectTarget, setRejectTarget] = useState(null);
 
@@ -47,7 +47,7 @@ export default function AdminDrivers() {
     } catch { alert('Failed'); }
   };
 
-  const FILTERS = ['pending','approved','rejected'];
+  const FILTERS = ['pending', 'approved', 'rejected'];
 
   return (
     <div className="page" style={{ paddingBottom: 70 }}>
@@ -57,10 +57,10 @@ export default function AdminDrivers() {
       </div>
 
       {/* Filter tabs */}
-      <div style={{ display:'flex', gap:0, padding:'0 16px', borderBottom:'1px solid var(--border)', background:'var(--bg)' }}>
+      <div style={{ display: 'flex', gap: 0, padding: '0 16px', borderBottom: '1px solid var(--border)', background: 'var(--bg)' }}>
         {FILTERS.map(f => (
           <button key={f} onClick={() => setFilter(f)}
-            style={{ flex:1, padding:'12px 0', background:'none', border:'none', color: filter===f ? 'var(--text)' : 'var(--text-3)', fontWeight: filter===f ? 700 : 400, fontSize:14, cursor:'pointer', borderBottom: filter===f ? '2px solid var(--pink)' : '2px solid transparent', textTransform:'capitalize' }}>
+            style={{ flex: 1, padding: '12px 0', background: 'none', border: 'none', color: filter === f ? 'var(--text)' : 'var(--text-3)', fontWeight: filter === f ? 700 : 400, fontSize: 14, cursor: 'pointer', borderBottom: filter === f ? '2px solid var(--pink)' : '2px solid transparent', textTransform: 'capitalize' }}>
             {f}
           </button>
         ))}
@@ -68,19 +68,19 @@ export default function AdminDrivers() {
 
       {/* Reject modal overlay */}
       {rejectTarget && (
-        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.75)', zIndex:999, display:'flex', alignItems:'flex-end', justifyContent:'center' }}>
-          <div style={{ background:'var(--bg-2)', borderRadius:'20px 20px 0 0', padding:24, width:'100%', maxWidth:430, border:'1px solid var(--border)' }}>
-            <div style={{ fontWeight:700, fontSize:18, marginBottom:12 }}>Rejection Reason</div>
-            <div style={{ fontSize:13, color:'var(--text-2)', marginBottom:12 }}>This will be shown to the driver so they can re-apply.</div>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', zIndex: 999, display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
+          <div style={{ background: 'var(--bg-2)', borderRadius: '20px 20px 0 0', padding: 24, width: '100%', maxWidth: 430, border: '1px solid var(--border)' }}>
+            <div style={{ fontWeight: 700, fontSize: 18, marginBottom: 12 }}>Rejection Reason</div>
+            <div style={{ fontSize: 13, color: 'var(--text-2)', marginBottom: 12 }}>This will be shown to the driver so they can re-apply.</div>
             <textarea
-              style={{ width:'100%', background:'var(--bg-3)', border:'1px solid var(--border)', borderRadius:8, padding:12, color:'var(--text)', fontSize:14, minHeight:80, outline:'none', resize:'vertical' }}
+              style={{ width: '100%', background: 'var(--bg-3)', border: '1px solid var(--border)', borderRadius: 8, padding: 12, color: 'var(--text)', fontSize: 14, minHeight: 80, outline: 'none', resize: 'vertical' }}
               placeholder="e.g. Photo quality too low, please re-upload a clearer selfie"
               value={rejectReason}
               onChange={e => setRejectReason(e.target.value)}
             />
-            <div style={{ display:'flex', gap:10, marginTop:12 }}>
-              <button className="btn btn-ghost" style={{ flex:1, width:'auto' }} onClick={() => { setRejectTarget(null); setRejectReason(''); }}>Cancel</button>
-              <button className="btn btn-danger" style={{ flex:1 }} onClick={confirmReject} disabled={!!acting}>
+            <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
+              <button className="btn btn-ghost" style={{ flex: 1, width: 'auto' }} onClick={() => { setRejectTarget(null); setRejectReason(''); }}>Cancel</button>
+              <button className="btn btn-danger" style={{ flex: 1 }} onClick={confirmReject} disabled={!!acting}>
                 {acting ? 'Rejecting…' : 'Confirm Reject'}
               </button>
             </div>
@@ -88,7 +88,7 @@ export default function AdminDrivers() {
         </div>
       )}
 
-      <div style={{ padding:'16px' }}>
+      <div style={{ padding: '16px' }}>
         {loading && <div className="spinner" />}
 
         {!loading && drivers.length === 0 && (
@@ -99,14 +99,14 @@ export default function AdminDrivers() {
         )}
 
         {drivers.map(d => (
-          <div key={d._id} className="card" style={{ marginBottom:10 }}>
+          <div key={d._id} className="card" style={{ marginBottom: 10 }}>
             {/* Driver header */}
-            <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:12 }}>
-              <div style={{ width:48, height:48, borderRadius:'50%', background:'var(--bg-3)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:24, border:'2px solid var(--border-2)' }}>👩</div>
-              <div style={{ flex:1 }}>
-                <div style={{ fontWeight:700, fontSize:16 }}>{d.name}</div>
-                <div style={{ fontSize:13, color:'var(--text-2)' }}>{d.phone}</div>
-                <div style={{ fontSize:12, color:'var(--text-3)', marginTop:2 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+              <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'var(--bg-3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, border: '2px solid var(--border-2)' }}>👩</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 700, fontSize: 16 }}>{d.name}</div>
+                <div style={{ fontSize: 13, color: 'var(--text-2)' }}>{d.phone}</div>
+                <div style={{ fontSize: 12, color: 'var(--text-3)', marginTop: 2 }}>
                   {d.vehicleType === 'auto' ? '🛺' : '🚗'} {d.vehicleType?.toUpperCase()} · {d.vehicleNumber}
                 </div>
               </div>
@@ -114,32 +114,32 @@ export default function AdminDrivers() {
             </div>
 
             {/* Document links */}
-            <div style={{ fontSize:12, color:'var(--text-3)', marginBottom:6 }}>Documents uploaded:</div>
+            <div style={{ fontSize: 12, color: 'var(--text-3)', marginBottom: 6 }}>Documents uploaded:</div>
             <div className="doc-thumb">
-              {d.govIdUrl   && <a href={d.govIdUrl}   target="_blank" rel="noreferrer">🪪 Gov ID</a>}
+              {d.govIdUrl && <a href={d.govIdUrl} target="_blank" rel="noreferrer">🪪 Gov ID</a>}
               {d.licenseUrl && <a href={d.licenseUrl} target="_blank" rel="noreferrer">🚗 License</a>}
-              {d.rcBookUrl  && <a href={d.rcBookUrl}  target="_blank" rel="noreferrer">📄 RC Book</a>}
-              {d.selfieUrl  && <a href={d.selfieUrl}  target="_blank" rel="noreferrer">🤳 Selfie</a>}
+              {d.rcBookUrl && <a href={d.rcBookUrl} target="_blank" rel="noreferrer">📄 RC Book</a>}
+              {d.selfieUrl && <a href={d.selfieUrl} target="_blank" rel="noreferrer">🤳 Selfie</a>}
               {!d.govIdUrl && !d.licenseUrl && !d.rcBookUrl && !d.selfieUrl && (
-                <span style={{ fontSize:12, color:'var(--red)' }}>⚠ No documents uploaded yet</span>
+                <span style={{ fontSize: 12, color: 'var(--red)' }}>⚠ No documents uploaded yet</span>
               )}
             </div>
 
             <div className="divider" />
 
             {/* Registered on */}
-            <div style={{ fontSize:12, color:'var(--text-3)', marginBottom:10 }}>
-              Registered: {new Date(d.createdAt).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' })}
+            <div style={{ fontSize: 12, color: 'var(--text-3)', marginBottom: 10 }}>
+              Registered: {new Date(d.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
             </div>
 
             {/* Actions */}
             {d.verificationStatus === 'pending' && (
-              <div style={{ display:'flex', gap:8 }}>
-                <button className="btn btn-danger btn-sm" style={{ flex:1, width:'auto' }}
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button className="btn btn-danger btn-sm" style={{ flex: 1, width: 'auto' }}
                   onClick={() => setRejectTarget(d._id)} disabled={acting === d._id}>
                   ✗ Reject
                 </button>
-                <button className="btn btn-success btn-sm" style={{ flex:1 }}
+                <button className="btn btn-success btn-sm" style={{ flex: 1 }}
                   onClick={() => approve(d._id)} disabled={acting === d._id}>
                   {acting === d._id ? 'Approving…' : '✓ Approve'}
                 </button>
@@ -155,7 +155,7 @@ export default function AdminDrivers() {
             )}
 
             {d.verificationStatus === 'rejected' && d.rejectionReason && (
-              <div className="alert alert-error" style={{ margin:0 }}>
+              <div className="alert alert-error" style={{ margin: 0 }}>
                 Rejected: {d.rejectionReason}
               </div>
             )}

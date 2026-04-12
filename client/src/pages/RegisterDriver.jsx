@@ -8,16 +8,16 @@ import { useAuth } from '../context/AuthContext';
 const STEPS = ['Phone', 'Verify', 'Details', 'Vehicle'];
 
 export default function RegisterDriver() {
-  const navigate  = useNavigate();
+  const navigate = useNavigate();
   const { login } = useAuth();
 
-  const [step, setStep]       = useState(0);
+  const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [error, setError]     = useState('');
-  const [devOtp, setDevOtp]   = useState('');
-  const [form, setForm]       = useState({
-    name:'', phone:'', email:'', otp:'', selfDeclaredFemale:false,
-    vehicleType:'', vehicleNumber:'', vehicleModel:'',
+  const [error, setError] = useState('');
+  const [devOtp, setDevOtp] = useState('');
+  const [form, setForm] = useState({
+    name: '', phone: '', email: '', otp: '', selfDeclaredFemale: false,
+    vehicleType: '', vehicleNumber: '', vehicleModel: '',
   });
 
   const set = field => e => {
@@ -58,9 +58,9 @@ export default function RegisterDriver() {
       login(r.data.driver, r.data.token);
       // Ternary: Navigate to upload docs only after successful registration with driver & token
       navigate(r.data.driver && r.data.token ? '/driver/verify' : '/login');
-    } catch (e) { 
+    } catch (e) {
       console.error('❌ Registration error:', e);
-      setError(e.response?.data?.message || 'Registration failed'); 
+      setError(e.response?.data?.message || 'Registration failed');
     }
     finally { setLoading(false); }
   };
@@ -79,7 +79,7 @@ export default function RegisterDriver() {
           <div key={i} className={`progress-step ${i <= step ? 'done' : ''}`} />
         ))}
       </div>
-      <p style={{ fontSize:13, color:'var(--text-3)', marginBottom:20, textAlign:'center' }}>
+      <p style={{ fontSize: 13, color: 'var(--text-3)', marginBottom: 20, textAlign: 'center' }}>
         Step {step + 1} of {STEPS.length} — {STEPS[step]}
       </p>
 
@@ -102,11 +102,11 @@ export default function RegisterDriver() {
       {/* STEP 1: OTP verification — "Authentication (should be female)" gate */}
       {step === 1 && (
         <div>
-          <div style={{ marginBottom:20 }}>
-            <div style={{ fontSize:15, color:'var(--text-2)' }}>OTP sent to</div>
-            <div style={{ fontSize:20, fontWeight:700 }}>{form.phone}</div>
+          <div style={{ marginBottom: 20 }}>
+            <div style={{ fontSize: 15, color: 'var(--text-2)' }}>OTP sent to</div>
+            <div style={{ fontSize: 20, fontWeight: 700 }}>{form.phone}</div>
             <button type="button" onClick={() => setStep(0)}
-              style={{ background:'none', border:'none', color:'var(--pink)', cursor:'pointer', marginTop:4, fontSize:13 }}>
+              style={{ background: 'none', border: 'none', color: 'var(--pink)', cursor: 'pointer', marginTop: 4, fontSize: 13 }}>
               ← Change number
             </button>
           </div>
@@ -134,7 +134,7 @@ export default function RegisterDriver() {
             <label>
               <input type="checkbox" checked={form.selfDeclaredFemale} onChange={set('selfDeclaredFemale')} />
               <span>
-                I confirm I identify as <strong style={{ color:'var(--pink)' }}>female</strong>. I understand
+                I confirm I identify as <strong style={{ color: 'var(--pink)' }}>female</strong>. I understand
                 SheRide is a women-only platform for both drivers and passengers. I will submit valid documents for verification.
               </span>
             </label>
@@ -150,22 +150,22 @@ export default function RegisterDriver() {
       {/* STEP 3: Vehicle info — "Rides pick-up (options — auto, diff ppl)" from flowchart */}
       {step === 3 && (
         <div>
-          <p style={{ fontSize:13, color:'var(--text-3)', marginBottom:14 }}>
+          <p style={{ fontSize: 13, color: 'var(--text-3)', marginBottom: 14 }}>
             Choose the vehicle you'll use for rides
           </p>
 
           {/* Vehicle type selector — auto or car */}
-          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginBottom:16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 16 }}>
             {[
-              { type:'auto', icon:'🛺', name:'Auto', sub:'₹8/km · 3 seats' },
-              { type:'car',  icon:'🚗', name:'Car',  sub:'₹14/km · 4 seats' },
+              { type: 'auto', icon: '🛺', name: 'Auto', sub: '₹8/km · 3 seats' },
+              { type: 'car', icon: '🚗', name: 'Car', sub: '₹14/km · 4 seats' },
             ].map(v => (
               <button key={v.type}
                 onClick={() => setForm(p => ({ ...p, vehicleType: v.type }))}
-                style={{ background: form.vehicleType===v.type ? 'rgba(233,30,140,0.15)' : 'var(--bg-3)', border: `2px solid ${form.vehicleType===v.type ? 'var(--pink)' : 'var(--border)'}`, borderRadius:12, padding:'16px 10px', cursor:'pointer', textAlign:'center', transition:'all 0.15s' }}>
-                <div style={{ fontSize:40, marginBottom:6 }}>{v.icon}</div>
-                <div style={{ fontWeight:700, color:'var(--text)' }}>{v.name}</div>
-                <div style={{ fontSize:12, color:'var(--text-3)', marginTop:2 }}>{v.sub}</div>
+                style={{ background: form.vehicleType === v.type ? 'rgba(233,30,140,0.15)' : 'var(--bg-3)', border: `2px solid ${form.vehicleType === v.type ? 'var(--pink)' : 'var(--border)'}`, borderRadius: 12, padding: '16px 10px', cursor: 'pointer', textAlign: 'center', transition: 'all 0.15s' }}>
+                <div style={{ fontSize: 40, marginBottom: 6 }}>{v.icon}</div>
+                <div style={{ fontWeight: 700, color: 'var(--text)' }}>{v.name}</div>
+                <div style={{ fontSize: 12, color: 'var(--text-3)', marginTop: 2 }}>{v.sub}</div>
               </button>
             ))}
           </div>
@@ -174,7 +174,7 @@ export default function RegisterDriver() {
             <label>Vehicle Number *</label>
             <input type="text" placeholder="e.g. MH12QR8383"
               value={form.vehicleNumber} onChange={set('vehicleNumber')}
-              style={{ textTransform:'uppercase' }} />
+              style={{ textTransform: 'uppercase' }} />
           </div>
           <div className="form-group">
             <label>Vehicle Model</label>
@@ -182,7 +182,7 @@ export default function RegisterDriver() {
               value={form.vehicleModel} onChange={set('vehicleModel')} />
           </div>
 
-          <div className="alert alert-info" style={{ marginBottom:16 }}>
+          <div className="alert alert-info" style={{ marginBottom: 16 }}>
             📋 After registering, you'll upload your Aadhar, Driving License, RC Book and Selfie for admin review (24–48 hrs).
           </div>
 
@@ -190,13 +190,13 @@ export default function RegisterDriver() {
             disabled={loading || !form.vehicleType || !form.vehicleNumber.trim()}>
             {loading ? 'Registering…' : 'Register & Upload Docs →'}
           </button>
-          <button className="btn btn-ghost" style={{ marginTop:8 }} onClick={() => setStep(2)}>← Back</button>
+          <button className="btn btn-ghost" style={{ marginTop: 8 }} onClick={() => setStep(2)}>← Back</button>
         </div>
       )}
 
-      <p style={{ textAlign:'center', marginTop:24, color:'var(--text-3)', fontSize:14 }}>
+      <p style={{ textAlign: 'center', marginTop: 24, color: 'var(--text-3)', fontSize: 14 }}>
         Already registered?{' '}
-        <Link to="/login" style={{ color:'var(--pink)' }}>Log in</Link>
+        <Link to="/login" style={{ color: 'var(--pink)' }}>Log in</Link>
       </p>
     </div>
   );

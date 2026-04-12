@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import api from '../../services/api';
 
 export default function DriverHistory() {
-  const [rides, setRides]     = useState([]);
+  const [rides, setRides] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -14,9 +14,9 @@ export default function DriverHistory() {
   if (loading) return <div className="spinner" />;
 
   return (
-    <div className="page" style={{ paddingBottom:70 }}>
+    <div className="page" style={{ paddingBottom: 70 }}>
       <div className="header"><span className="header-title">Trip History</span></div>
-      <div style={{ padding:'16px' }}>
+      <div style={{ padding: '16px' }}>
         {rides.length === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">📋</div>
@@ -24,22 +24,22 @@ export default function DriverHistory() {
           </div>
         ) : rides.map(r => (
           <div className="history-row" key={r._id}>
-            <span style={{ fontSize:36 }}>{r.vehicleType === 'auto' ? '🛺' : '🚗'}</span>
-            <div style={{ flex:1, minWidth:0 }}>
-              <div style={{ display:'flex', justifyContent:'space-between', marginBottom:4 }}>
-                <span style={{ fontWeight:700, fontSize:14 }}>
+            <span style={{ fontSize: 36 }}>{r.vehicleType === 'auto' ? '🛺' : '🚗'}</span>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                <span style={{ fontWeight: 700, fontSize: 14 }}>
                   {r.passengerId?.name || 'Passenger'}
                 </span>
                 <span className={`badge badge-${r.status}`}>{r.status}</span>
               </div>
-              <div style={{ fontSize:13, color:'var(--text-2)', marginBottom:2, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
+              <div style={{ fontSize: 13, color: 'var(--text-2)', marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 📍 {r.pickupLocation?.address}
               </div>
-              <div style={{ display:'flex', justifyContent:'space-between', fontSize:13, marginTop:4 }}>
-                <span style={{ color:'var(--text-3)' }}>
-                  {new Date(r.createdAt).toLocaleDateString('en-IN', { day:'numeric', month:'short' })}
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginTop: 4 }}>
+                <span style={{ color: 'var(--text-3)' }}>
+                  {new Date(r.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
                 </span>
-                <strong style={{ color:'var(--green)' }}>₹{r.actualFare || r.estimatedFare}</strong>
+                <strong style={{ color: 'var(--green)' }}>₹{r.actualFare || r.estimatedFare}</strong>
               </div>
             </div>
           </div>

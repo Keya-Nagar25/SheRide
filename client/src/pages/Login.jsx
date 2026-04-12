@@ -68,7 +68,7 @@ export default function Login() {
             <div style={{ fontSize: 16, marginBottom: 4 }}>Enter the code sent to</div>
             <div style={{ fontSize: 20, fontWeight: 700 }}>{phone}</div>
             <button type="button" onClick={() => setStep(1)}
-              style={{ background:'none', border:'none', color:'var(--pink)', cursor:'pointer', marginTop: 4, fontSize: 14 }}>
+              style={{ background: 'none', border: 'none', color: 'var(--pink)', cursor: 'pointer', marginTop: 4, fontSize: 14 }}>
               Change number
             </button>
           </div>
@@ -86,7 +86,7 @@ export default function Login() {
         <p style={{ color: 'var(--text-3)', marginBottom: 14, fontSize: 14 }}>New to SheRide?</p>
         <div style={{ display: 'flex', gap: 10 }}>
           <Link to="/register/passenger" className="btn btn-ghost btn-sm" style={{ flex: 1 }}>👩 Join as Passenger</Link>
-          <Link to="/register/driver"    className="btn btn-ghost btn-sm" style={{ flex: 1 }}>🚗 Become a Driver</Link>
+          <Link to="/register/driver" className="btn btn-ghost btn-sm" style={{ flex: 1 }}>🚗 Become a Driver</Link>
         </div>
       </div>
     </div>

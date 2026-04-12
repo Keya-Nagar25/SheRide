@@ -6,16 +6,16 @@ import React, { useEffect, useRef, useCallback } from 'react';
 
 const MapView = ({
   pickupLat, pickupLng,
-  dropLat,   dropLng,
+  dropLat, dropLng,
   driverLat, driverLng,
   height = '300px',
   onMapClick,         // optional: called with { lat, lng } when user clicks
   showRoute = false,
 }) => {
-  const mapRef      = useRef(null);
+  const mapRef = useRef(null);
   const mapInstance = useRef(null);
-  const markersRef  = useRef([]);
-  const routeRef    = useRef(null);
+  const markersRef = useRef([]);
+  const routeRef = useRef(null);
   const driverMarkerRef = useRef(null);
 
   const clearMarkers = () => {
@@ -37,7 +37,7 @@ const MapView = ({
       disableDefaultUI: true,
       zoomControl: false,
       styles: [
-        { elementType: 'geometry',        stylers: [{ color: '#1a1a1a' }] },
+        { elementType: 'geometry', stylers: [{ color: '#1a1a1a' }] },
         { elementType: 'labels.text.fill', stylers: [{ color: '#8a8a8a' }] },
         { elementType: 'labels.text.stroke', stylers: [{ color: '#1a1a1a' }] },
         { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#2e2e2e' }] },
@@ -137,9 +137,9 @@ const MapView = ({
 
       ds.route(
         {
-          origin:      { lat: parseFloat(pickupLat), lng: parseFloat(pickupLng) },
-          destination: { lat: parseFloat(dropLat),   lng: parseFloat(dropLng) },
-          travelMode:  window.google.maps.TravelMode.DRIVING,
+          origin: { lat: parseFloat(pickupLat), lng: parseFloat(pickupLng) },
+          destination: { lat: parseFloat(dropLat), lng: parseFloat(dropLng) },
+          travelMode: window.google.maps.TravelMode.DRIVING,
         },
         (result, status) => {
           if (status === 'OK') dr.setDirections(result);

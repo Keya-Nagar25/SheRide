@@ -8,14 +8,14 @@ import { useAuth } from '../context/AuthContext';
 const STEPS = ['Phone', 'Verify', 'Details'];
 
 export default function RegisterPassenger() {
-  const navigate  = useNavigate();
+  const navigate = useNavigate();
   const { login } = useAuth();
 
-  const [step, setStep]       = useState(0);   // 0=phone, 1=otp, 2=details
+  const [step, setStep] = useState(0);   // 0=phone, 1=otp, 2=details
   const [loading, setLoading] = useState(false);
-  const [error, setError]     = useState('');
-  const [devOtp, setDevOtp]   = useState('');
-  const [form, setForm]       = useState({ name:'', phone:'', email:'', otp:'', selfDeclaredFemale: false });
+  const [error, setError] = useState('');
+  const [devOtp, setDevOtp] = useState('');
+  const [form, setForm] = useState({ name: '', phone: '', email: '', otp: '', selfDeclaredFemale: false });
 
   const set = field => e => {
     const v = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
@@ -68,7 +68,7 @@ export default function RegisterPassenger() {
           <div key={i} className={`progress-step ${i <= step ? 'done' : ''}`} />
         ))}
       </div>
-      <p style={{ fontSize:13, color:'var(--text-3)', marginBottom:20, textAlign:'center' }}>
+      <p style={{ fontSize: 13, color: 'var(--text-3)', marginBottom: 20, textAlign: 'center' }}>
         Step {step + 1} of {STEPS.length} — {STEPS[step]}
       </p>
 
@@ -91,11 +91,11 @@ export default function RegisterPassenger() {
       {/* STEP 1: Enter OTP — Authentication (should be female) gate */}
       {step === 1 && (
         <div>
-          <div style={{ marginBottom:20 }}>
-            <div style={{ fontSize:15, color:'var(--text-2)' }}>OTP sent to</div>
-            <div style={{ fontSize:20, fontWeight:700 }}>{form.phone}</div>
+          <div style={{ marginBottom: 20 }}>
+            <div style={{ fontSize: 15, color: 'var(--text-2)' }}>OTP sent to</div>
+            <div style={{ fontSize: 20, fontWeight: 700 }}>{form.phone}</div>
             <button type="button" onClick={() => setStep(0)}
-              style={{ background:'none', border:'none', color:'var(--pink)', cursor:'pointer', marginTop:4, fontSize:13 }}>
+              style={{ background: 'none', border: 'none', color: 'var(--pink)', cursor: 'pointer', marginTop: 4, fontSize: 13 }}>
               ← Change number
             </button>
           </div>
@@ -124,7 +124,7 @@ export default function RegisterPassenger() {
             <label>
               <input type="checkbox" checked={form.selfDeclaredFemale} onChange={set('selfDeclaredFemale')} />
               <span>
-                I confirm I identify as <strong style={{ color:'var(--pink)' }}>female</strong>. I understand SheRide is
+                I confirm I identify as <strong style={{ color: 'var(--pink)' }}>female</strong>. I understand SheRide is
                 a women-only platform. Providing false information will result in immediate account removal.
               </span>
             </label>
@@ -137,13 +137,13 @@ export default function RegisterPassenger() {
         </div>
       )}
 
-      <p style={{ textAlign:'center', marginTop:24, color:'var(--text-3)', fontSize:14 }}>
+      <p style={{ textAlign: 'center', marginTop: 24, color: 'var(--text-3)', fontSize: 14 }}>
         Already have an account?{' '}
-        <Link to="/login" style={{ color:'var(--pink)' }}>Log in</Link>
+        <Link to="/login" style={{ color: 'var(--pink)' }}>Log in</Link>
       </p>
-      <p style={{ textAlign:'center', marginTop:8, color:'var(--text-3)', fontSize:14 }}>
+      <p style={{ textAlign: 'center', marginTop: 8, color: 'var(--text-3)', fontSize: 14 }}>
         Want to drive?{' '}
-        <Link to="/register/driver" style={{ color:'var(--pink)' }}>Register as driver →</Link>
+        <Link to="/register/driver" style={{ color: 'var(--pink)' }}>Register as driver →</Link>
       </p>
     </div>
   );

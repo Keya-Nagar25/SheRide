@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import api from '../../services/api';
 
 export default function DriverEarnings() {
-  const [data, setData]     = useState(null);
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -14,10 +14,10 @@ export default function DriverEarnings() {
   if (loading) return <div className="spinner" />;
 
   return (
-    <div className="page" style={{ paddingBottom:70 }}>
+    <div className="page" style={{ paddingBottom: 70 }}>
       <div className="header"><span className="header-title">Earnings 💰</span></div>
-      <div style={{ padding:'16px' }}>
-        <div className="stat-grid" style={{ marginBottom:16 }}>
+      <div style={{ padding: '16px' }}>
+        <div className="stat-grid" style={{ marginBottom: 16 }}>
           <div className="stat-card green">
             <div className="stat-value">₹{data.today}</div>
             <div className="stat-label">Today</div>
@@ -28,21 +28,21 @@ export default function DriverEarnings() {
           </div>
         </div>
 
-        <div style={{ fontWeight:700, marginBottom:12 }}>Recent trips</div>
+        <div style={{ fontWeight: 700, marginBottom: 12 }}>Recent trips</div>
         {data.earnings.length === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">💰</div>
             <p>No trips yet.<br />Go online to start earning!</p>
           </div>
         ) : data.earnings.map(e => (
-          <div key={e._id} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'14px 0', borderBottom:'1px solid var(--border)' }}>
+          <div key={e._id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: '1px solid var(--border)' }}>
             <div>
-              <div style={{ fontSize:14, fontWeight:600 }}>{e.rideId?.pickupLocation?.address || 'Trip'}</div>
-              <div style={{ fontSize:12, color:'var(--text-3)', marginTop:2 }}>
-                {new Date(e.date).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' })}
+              <div style={{ fontSize: 14, fontWeight: 600 }}>{e.rideId?.pickupLocation?.address || 'Trip'}</div>
+              <div style={{ fontSize: 12, color: 'var(--text-3)', marginTop: 2 }}>
+                {new Date(e.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
               </div>
             </div>
-            <span style={{ fontSize:16, fontWeight:700, color:'var(--green)' }}>+₹{e.amount}</span>
+            <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--green)' }}>+₹{e.amount}</span>
           </div>
         ))}
       </div>

@@ -4,15 +4,15 @@
 // Rate cards (in Indian Rupees)
 const rateCard = {
   auto: {
-    baseFare: 20,      // Starting charge
-    perKm:    8,       // Per kilometre
-    perMin:   0.5,     // Per minute
+    baseFare: 25,      // Starting charge
+    perKm:    17,       // Per kilometre
+    perMin:   1.5,     // Per minute
     minFare:  30,      // Minimum you pay even for very short trips
   },
   car: {
     baseFare: 50,
-    perKm:    14,
-    perMin:   1.5,
+    perKm:    25,
+    perMin:   2.5,
     minFare:  80,
   },
 };

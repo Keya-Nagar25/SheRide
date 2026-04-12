@@ -12,45 +12,45 @@ import api from '../../services/api';
 import { useSocket } from '../../context/SocketContext';
 
 const DARK_STYLES = [
-  { elementType: 'geometry',            stylers: [{ color: '#1a1a1a' }] },
-  { elementType: 'labels.text.fill',    stylers: [{ color: '#8a8a8a' }] },
-  { elementType: 'labels.text.stroke',  stylers: [{ color: '#1a1a1a' }] },
+  { elementType: 'geometry', stylers: [{ color: '#1a1a1a' }] },
+  { elementType: 'labels.text.fill', stylers: [{ color: '#8a8a8a' }] },
+  { elementType: 'labels.text.stroke', stylers: [{ color: '#1a1a1a' }] },
   { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#2e2e2e' }] },
-  { featureType: 'road.arterial',  elementType: 'geometry', stylers: [{ color: '#373737' }] },
-  { featureType: 'road.highway',   elementType: 'geometry', stylers: [{ color: '#3c3c3c' }] },
-  { featureType: 'water',          elementType: 'geometry', stylers: [{ color: '#0e1a2b' }] },
-  { featureType: 'poi',            stylers: [{ visibility: 'off' }] },
+  { featureType: 'road.arterial', elementType: 'geometry', stylers: [{ color: '#373737' }] },
+  { featureType: 'road.highway', elementType: 'geometry', stylers: [{ color: '#3c3c3c' }] },
+  { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0e1a2b' }] },
+  { featureType: 'poi', stylers: [{ visibility: 'off' }] },
 ];
 
 export default function Book() {
-  const navigate  = useNavigate();
-  const [params]  = useSearchParams();
+  const navigate = useNavigate();
+  const [params] = useSearchParams();
   const { socket } = useSocket();
 
   // ---- Map refs ----
-  const mapRef          = useRef(null);
-  const mapObj          = useRef(null);
-  const pickupMarker    = useRef(null);
-  const dropMarker      = useRef(null);
-  const routeRenderer   = useRef(null);
-  const pickupInputRef  = useRef(null);   // for Places Autocomplete
-  const dropInputRef    = useRef(null);   // for Places Autocomplete
-  const pickupAutoRef   = useRef(null);
-  const dropAutoRef     = useRef(null);
+  const mapRef = useRef(null);
+  const mapObj = useRef(null);
+  const pickupMarker = useRef(null);
+  const dropMarker = useRef(null);
+  const routeRenderer = useRef(null);
+  const pickupInputRef = useRef(null);   // for Places Autocomplete
+  const dropInputRef = useRef(null);   // for Places Autocomplete
+  const pickupAutoRef = useRef(null);
+  const dropAutoRef = useRef(null);
 
   // ---- State ----
-  const [step,        setStep]        = useState('locations'); // 'locations' | 'vehicle'
-  const [pickup,      setPickup]      = useState({ address: '', lat: null, lng: null });
-  const [drop,        setDrop]        = useState({ address: '', lat: null, lng: null });
+  const [step, setStep] = useState('locations'); // 'locations' | 'vehicle'
+  const [pickup, setPickup] = useState({ address: '', lat: null, lng: null });
+  const [drop, setDrop] = useState({ address: '', lat: null, lng: null });
   const [vehicleType, setVehicleType] = useState(params.get('type') || '');
-  const [estimates,   setEstimates]   = useState(null);
-  const [distKm,      setDistKm]      = useState(0);
+  const [estimates, setEstimates] = useState(null);
+  const [distKm, setDistKm] = useState(0);
   const [durationMin, setDurationMin] = useState(0);
-  const [payMethod,   setPayMethod]   = useState('cash');
-  const [loading,     setLoading]     = useState(false);
-  const [gettingLoc,  setGettingLoc]  = useState(false);
-  const [mapsReady,   setMapsReady]   = useState(!!window.googleMapsReady);
-  const [error,       setError]       = useState('');
+  const [payMethod, setPayMethod] = useState('cash');
+  const [loading, setLoading] = useState(false);
+  const [gettingLoc, setGettingLoc] = useState(false);
+  const [mapsReady, setMapsReady] = useState(!!window.googleMapsReady);
+  const [error, setError] = useState('');
 
   // ---- Wait for Google Maps to load ----
   useEffect(() => {
@@ -175,9 +175,9 @@ export default function Book() {
 
       ds.route(
         {
-          origin:      { lat: pickup.lat, lng: pickup.lng },
-          destination: { lat: drop.lat,   lng: drop.lng   },
-          travelMode:  window.google.maps.TravelMode.DRIVING,
+          origin: { lat: pickup.lat, lng: pickup.lng },
+          destination: { lat: drop.lat, lng: drop.lng },
+          travelMode: window.google.maps.TravelMode.DRIVING,
         },
         (result, status) => {
           if (status === 'OK') {
@@ -188,7 +188,7 @@ export default function Book() {
             // Fit both markers on screen
             const bounds = new window.google.maps.LatLngBounds();
             bounds.extend({ lat: pickup.lat, lng: pickup.lng });
-            bounds.extend({ lat: drop.lat,   lng: drop.lng   });
+            bounds.extend({ lat: drop.lat, lng: drop.lng });
             mapObj.current.fitBounds(bounds, { top: 60, right: 40, bottom: 40, left: 40 });
           }
         }
@@ -201,7 +201,7 @@ export default function Book() {
     if (!pickup.lat || !drop.lat) return;
     api.post('/rides/estimate', {
       pickupLat: pickup.lat, pickupLng: pickup.lng,
-      dropLat:   drop.lat,   dropLng:   drop.lng,
+      dropLat: drop.lat, dropLng: drop.lng,
     })
       .then(res => {
         setEstimates(res.data.estimates);
@@ -209,7 +209,7 @@ export default function Book() {
         if (!distKm) setDistKm(res.data.distanceKm);
         if (!durationMin) setDurationMin(res.data.durationMin);
       })
-      .catch(() => {});
+      .catch(() => { });
   }, [pickup.lat, pickup.lng, drop.lat, drop.lng]);
 
   // ---- Use device location for pickup ----
@@ -245,13 +245,13 @@ export default function Book() {
     try {
       const res = await api.post('/rides/book', {
         vehicleType,
-        paymentMethod:  payMethod,
-        pickupAddress:  pickup.address,
-        pickupLat:      pickup.lat,
-        pickupLng:      pickup.lng,
-        dropAddress:    drop.address,
-        dropLat:        drop.lat,
-        dropLng:        drop.lng,
+        paymentMethod: payMethod,
+        pickupAddress: pickup.address,
+        pickupLat: pickup.lat,
+        pickupLng: pickup.lng,
+        dropAddress: drop.address,
+        dropLat: drop.lat,
+        dropLng: drop.lng,
       });
       const rideId = res.data.ride._id;
       if (socket) {
@@ -423,8 +423,8 @@ export default function Book() {
                 {!pickup.lat && !drop.lat
                   ? '⬆ Search and select both locations above'
                   : !pickup.lat
-                  ? '⬆ Set your pickup location'
-                  : '⬆ Set your drop-off location'}
+                    ? '⬆ Set your pickup location'
+                    : '⬆ Set your drop-off location'}
               </div>
             )}
 
@@ -466,8 +466,8 @@ export default function Book() {
 
             {/* Vehicle rows — Auto and Car */}
             {[
-              { type: 'auto', icon: '🛺', name: 'Auto',  sub: `${durationMin} min · 3 seats`,     badge: 'Faster' },
-              { type: 'car',  icon: '🚗', name: 'Car',   sub: `${durationMin + 4} min · 4 seats · AC` },
+              { type: 'auto', icon: '🛺', name: 'Auto', sub: `${durationMin} min · 3 seats`, badge: 'Faster' },
+              { type: 'car', icon: '🚗', name: 'Car', sub: `${durationMin + 4} min · 4 seats · AC` },
             ].map(v => (
               <div
                 key={v.type}

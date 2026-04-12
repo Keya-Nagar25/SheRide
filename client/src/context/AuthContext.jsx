@@ -7,14 +7,14 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser]       = useState(null);
-  const [token, setToken]     = useState(null);
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true); // true while we check localStorage
 
   // On app load, check if user was already logged in
   useEffect(() => {
     const savedToken = localStorage.getItem('sheride_token');
-    const savedUser  = localStorage.getItem('sheride_user');
+    const savedUser = localStorage.getItem('sheride_user');
     if (savedToken && savedUser) {
       setToken(savedToken);
       setUser(JSON.parse(savedUser));
