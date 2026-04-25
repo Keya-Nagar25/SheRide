@@ -1,5 +1,3 @@
-// config/db.js  — Not needed separately since we connect in index.js
-// But here is the Cloudinary config
 
 const cloudinary = require('cloudinary').v2;
 
