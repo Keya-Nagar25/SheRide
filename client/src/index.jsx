@@ -1,4 +1,4 @@
-// src/index.js - The very first file React loads
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
