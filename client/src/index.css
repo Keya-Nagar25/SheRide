@@ -1,6 +1,4 @@
-/* ============================================================
-   SheRide — Dark Theme UI  (matches Uber India style)
-   ============================================================ */
+
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
   --bg: #000000; --bg-2: #1a1a1a; --bg-3: #242424; --bg-4: #2e2e2e;
