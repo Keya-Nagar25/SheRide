@@ -1,5 +1,3 @@
-// src/pages/RegisterDriver.js
-// Flowchart: Login/Register → Authentication (should be female) → DRIVER → Home Page
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
@@ -56,7 +54,6 @@ export default function RegisterDriver() {
       const r = await api.post('/auth/register/driver', form);
       console.log('✅ Registration successful:', r.data);
       login(r.data.driver, r.data.token);
-      // Ternary: Navigate to upload docs only after successful registration with driver & token
       navigate(r.data.driver && r.data.token ? '/driver/verify' : '/login');
     } catch (e) {
       console.error('❌ Registration error:', e);
@@ -73,7 +70,6 @@ export default function RegisterDriver() {
         <p>Earn by driving women safely</p>
       </div>
 
-      {/* Progress */}
       <div className="progress-steps">
         {STEPS.map((_, i) => (
           <div key={i} className={`progress-step ${i <= step ? 'done' : ''}`} />
@@ -86,7 +82,6 @@ export default function RegisterDriver() {
       {error && <div className="alert alert-error">⚠ {error}</div>}
       {devOtp && <div className="alert alert-info">🔑 Dev OTP: <strong>{devOtp}</strong></div>}
 
-      {/* STEP 0: Phone */}
       {step === 0 && (
         <div>
           <div className="form-group">
@@ -98,8 +93,6 @@ export default function RegisterDriver() {
           </button>
         </div>
       )}
-
-      {/* STEP 1: OTP verification — "Authentication (should be female)" gate */}
       {step === 1 && (
         <div>
           <div style={{ marginBottom: 20 }}>
@@ -118,7 +111,6 @@ export default function RegisterDriver() {
         </div>
       )}
 
-      {/* STEP 2: Personal details + Female declaration */}
       {step === 2 && (
         <div>
           <div className="form-group">
@@ -147,14 +139,12 @@ export default function RegisterDriver() {
         </div>
       )}
 
-      {/* STEP 3: Vehicle info — "Rides pick-up (options — auto, diff ppl)" from flowchart */}
       {step === 3 && (
         <div>
           <p style={{ fontSize: 13, color: 'var(--text-3)', marginBottom: 14 }}>
             Choose the vehicle you'll use for rides
           </p>
 
-          {/* Vehicle type selector — auto or car */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 16 }}>
             {[
               { type: 'auto', icon: '🛺', name: 'Auto', sub: '₹8/km · 3 seats' },
