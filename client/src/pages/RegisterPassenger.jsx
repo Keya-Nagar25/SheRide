@@ -1,5 +1,3 @@
-// src/pages/RegisterPassenger.js
-// Flowchart: Login/Register → Authentication (should be female) → USER → Home Page
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
@@ -11,7 +9,7 @@ export default function RegisterPassenger() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const [step, setStep] = useState(0);   // 0=phone, 1=otp, 2=details
+  const [step, setStep] = useState(0);   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [devOtp, setDevOtp] = useState('');
@@ -22,7 +20,6 @@ export default function RegisterPassenger() {
     setForm(p => ({ ...p, [field]: v }));
   };
 
-  // STEP 0 → 1: send OTP
   const sendOtp = async () => {
     if (form.phone.length < 10) { setError('Enter a valid phone number'); return; }
     setLoading(true); setError('');
@@ -34,14 +31,12 @@ export default function RegisterPassenger() {
     finally { setLoading(false); }
   };
 
-  // STEP 1 → 2: verify OTP
   const verifyOtp = () => {
     if (form.otp.length !== 6) { setError('Enter the 6-digit OTP'); return; }
     setError('');
     setStep(2);
   };
 
-  // STEP 2: complete registration
   const register = async () => {
     if (!form.name.trim()) { setError('Please enter your name'); return; }
     if (!form.selfDeclaredFemale) { setError('You must confirm you identify as female to register'); return; }
@@ -62,7 +57,6 @@ export default function RegisterPassenger() {
         <p>Safe rides, only for women</p>
       </div>
 
-      {/* Progress bar */}
       <div className="progress-steps">
         {STEPS.map((_, i) => (
           <div key={i} className={`progress-step ${i <= step ? 'done' : ''}`} />
@@ -75,7 +69,6 @@ export default function RegisterPassenger() {
       {error && <div className="alert alert-error">⚠ {error}</div>}
       {devOtp && <div className="alert alert-info">🔑 Dev OTP: <strong>{devOtp}</strong></div>}
 
-      {/* STEP 0: Enter phone */}
       {step === 0 && (
         <div>
           <div className="form-group">
@@ -88,7 +81,6 @@ export default function RegisterPassenger() {
         </div>
       )}
 
-      {/* STEP 1: Enter OTP — Authentication (should be female) gate */}
       {step === 1 && (
         <div>
           <div style={{ marginBottom: 20 }}>
@@ -107,7 +99,6 @@ export default function RegisterPassenger() {
         </div>
       )}
 
-      {/* STEP 2: Details + Female declaration */}
       {step === 2 && (
         <div>
           <div className="form-group">
@@ -119,7 +110,6 @@ export default function RegisterPassenger() {
             <input type="email" placeholder="you@example.com" value={form.email} onChange={set('email')} />
           </div>
 
-          {/* Female authentication — from flowchart: "Authentication (should be female)" */}
           <div className="female-declaration">
             <label>
               <input type="checkbox" checked={form.selfDeclaredFemale} onChange={set('selfDeclaredFemale')} />
