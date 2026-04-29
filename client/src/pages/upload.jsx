@@ -1,7 +1,3 @@
-// src/pages/driver/UploadDocs.js
-// Document upload page — Step after "Register & Upload Docs"
-// Asks for: Aadhaar Card, Driver's License, and Photo/Selfie
-
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
@@ -257,7 +253,6 @@ const styles = {
   },
 };
 
-// ── Single upload card ────────────────────────────────────────────────────────
 function UploadCard({ icon, title, subtitle, hint, accept, file, onFile }) {
   const inputRef = useRef();
   const [dragging, setDragging] = useState(false);
@@ -330,7 +325,6 @@ function UploadCard({ icon, title, subtitle, hint, accept, file, onFile }) {
   );
 }
 
-// ── Main page ─────────────────────────────────────────────────────────────────
 export default function UploadDocs() {
   const navigate = useNavigate();
   const [files, setFiles] = useState({ aadhaar: null, license: null, selfie: null });
@@ -348,12 +342,9 @@ export default function UploadDocs() {
     setError('');
     try {
       const fd = new FormData();
-      // Match server field names: govId, license, rcBook
       fd.append('govId', files.aadhaar);
       fd.append('license', files.license);
       fd.append('rcBook', files.selfie);
-
-      // Debug: ensure token is present when making the request
       try { console.log('[upload] token=', localStorage.getItem('sheride_token')); } catch (err) { /* ignore */ }
 
       await api.post('/verify/upload-docs', fd, {
@@ -362,7 +353,6 @@ export default function UploadDocs() {
 
       setDone(true);
     } catch (e) {
-      // Log full response for debugging 403 errors
       console.error('[upload] error:', e?.response ?? e);
       setError(e.response?.data?.message || 'Upload failed. Please try again.');
     } finally {
@@ -370,7 +360,6 @@ export default function UploadDocs() {
     }
   };
 
-  // ── Ternary operator: Show success screen if all docs uploaded, otherwise show upload form ──────
   return done ? (
     <div style={styles.successPage}>
       <div style={styles.successIcon}>🎉</div>
@@ -386,14 +375,11 @@ export default function UploadDocs() {
     </div>
   ) : (
     <div style={styles.page}>
-      {/* Header */}
       <div style={styles.header}>
         <div style={styles.logo}>🚗</div>
         <h1 style={styles.title}>Upload Your Documents</h1>
         <p style={styles.subtitle}>Step 4 of 4 — Verification</p>
       </div>
-
-      {/* Progress — all 4 bars filled since we're on the last step */}
       <div style={styles.progressBar}>
         {[0, 1, 2, 3].map((i) => (
           <div key={i} style={styles.progressStep(true)} />
@@ -402,7 +388,6 @@ export default function UploadDocs() {
 
       {error && <div style={styles.alert('error')}>⚠ {error}</div>}
 
-      {/* Info box */}
       <div style={styles.infoBox}>
         📋 <strong style={{ color: '#ccc' }}>Why we need these</strong>
         <ul style={styles.checkList}>
@@ -412,7 +397,6 @@ export default function UploadDocs() {
         </ul>
       </div>
 
-      {/* Upload cards */}
       <UploadCard
         icon="🪪"
         title="Aadhaar Card"
@@ -441,7 +425,6 @@ export default function UploadDocs() {
         onFile={setFile('selfie')}
       />
 
-      {/* Submit */}
       <button
         style={styles.submitBtn(!allUploaded || loading)}
         disabled={!allUploaded || loading}
