@@ -1,4 +1,3 @@
-// src/pages/passenger/Track.js
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../services/api';
@@ -21,8 +20,6 @@ const STATUS_INFO = {
   completed: { label: 'You have arrived!', eta: 'Trip complete', color: 'var(--green)' },
   cancelled: { label: 'Ride cancelled', eta: '', color: 'var(--red)' },
 };
-
-// Random 4-digit PIN for trip
 const genPin = () => String(Math.floor(1000 + Math.random() * 9000)).split('');
 
 export default function Track() {
@@ -113,28 +110,28 @@ export default function Track() {
 
   return (
     <div className="page" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-      {/* Map */}
+      {}
       <div style={{ flex: 1, position: 'relative', minHeight: 220 }}>
         <div ref={mapRef} style={{ width: '100%', height: '100%', background: '#1a1a1a' }} />
-        {/* Safety button (top right like Uber) */}
+        {}
         <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(0,0,0,0.75)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 20, padding: '6px 14px', fontSize: 13, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
           🛡️ Safety
         </div>
-        {/* Down arrow to collapse */}
+        {}
         <button onClick={() => navigate('/passenger')} style={{ position: 'absolute', top: 12, left: 12, width: 36, height: 36, borderRadius: '50%', background: 'rgba(0,0,0,0.7)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', fontSize: 18, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>↓</button>
       </div>
 
-      {/* Bottom sheet */}
+      {}
       <div className="bottom-sheet" style={{ maxHeight: '65vh', overflowY: 'auto' }}>
         <div className="sheet-handle" />
 
-        {/* ETA status */}
+        {}
         <div style={{ textAlign: 'center', marginBottom: 14 }}>
           <div style={{ fontSize: 22, fontWeight: 700, color: info.color }}>{info.label}</div>
           {!isDone && <div style={{ fontSize: 13, color: 'var(--text-2)', marginTop: 4 }}>{info.eta}</div>}
         </div>
 
-        {/* PIN (shown when driver accepted) */}
+        {}
         {['accepted', 'started'].includes(ride.status) && (
           <div className="pin-bar">
             <span className="pin-label">Share PIN</span>
@@ -144,7 +141,7 @@ export default function Track() {
           </div>
         )}
 
-        {/* Trip details card */}
+        {}
         <div className="card" style={{ marginBottom: 10 }}>
           <div style={{ fontWeight: 700, marginBottom: 4 }}>
             {ride.status === 'accepted' ? 'Meet at the pickup point' : 'Trip details'}
@@ -171,7 +168,7 @@ export default function Track() {
           </div>
         </div>
 
-        {/* Driver card (shown after accepted) */}
+        {}
         {driver && (
           <div className="card" style={{ marginBottom: 10 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
@@ -198,14 +195,14 @@ export default function Track() {
           </div>
         )}
 
-        {/* Cancel */}
+        {}
         {['pending', 'accepted'].includes(ride.status) && (
           <button className="btn btn-danger w-full" style={{ marginBottom: 8 }} onClick={cancelRide}>
             Cancel Ride
           </button>
         )}
 
-        {/* Rating */}
+        {}
         {ride.status === 'completed' && !rated && (
           <div className="card">
             <div style={{ fontWeight: 700, marginBottom: 12 }}>Rate your driver</div>
