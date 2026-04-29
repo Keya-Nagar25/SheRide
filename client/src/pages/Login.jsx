@@ -1,4 +1,3 @@
-// src/pages/Login.js  — Dark themed, matches Uber style
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
