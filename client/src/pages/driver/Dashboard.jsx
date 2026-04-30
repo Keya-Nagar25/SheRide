@@ -1,4 +1,3 @@
-// src/pages/driver/Dashboard.js
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../../services/api';
@@ -53,7 +52,6 @@ export default function DriverDashboard() {
     else window.addEventListener('google-maps-ready', doInit, { once: true });
   }, []);
 
-  // GPS interval when online
   useEffect(() => {
     if (!isOnline) return;
     const interval = setInterval(() => {
@@ -67,7 +65,6 @@ export default function DriverDashboard() {
     return () => clearInterval(interval);
   }, [isOnline, activeRide, socket]);
 
-  // Socket listeners
   useEffect(() => {
     if (!socket) return;
     socket.on('ride:new', data => {
@@ -78,7 +75,6 @@ export default function DriverDashboard() {
     return () => socket.off('ride:new');
   }, [socket, isOnline]);
 
-  // Fetch today's earnings
   useEffect(() => {
     api.get('/driver/earnings').then(r => setEarnings({ today: r.data.today, total: r.data.total })).catch(() => {});
   }, []);
@@ -120,7 +116,7 @@ export default function DriverDashboard() {
 
   return (
     <div className="page" style={{ paddingBottom:70 }}>
-      {/* Map */}
+
       <div style={{ height:220, position:'relative' }}>
         <div ref={mapRef} style={{ width:'100%', height:'100%', background:'#1a1a1a' }} />
         <div style={{ position:'absolute', top:0, left:0, right:0, padding:'12px 16px', display:'flex', justifyContent:'space-between', alignItems:'center', background:'linear-gradient(to bottom,rgba(0,0,0,0.75),transparent)' }}>
@@ -133,7 +129,6 @@ export default function DriverDashboard() {
       </div>
 
       <div style={{ padding:'14px 16px' }}>
-        {/* Online toggle */}
         <div className="card" style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:10 }}>
           <div>
             <div style={{ fontWeight:700, fontSize:16 }}>{isOnline ? '🟢 Online' : '🔴 Offline'}</div>
@@ -150,7 +145,6 @@ export default function DriverDashboard() {
           </button>
         </div>
 
-        {/* Incoming ride alert */}
         {incomingRide && (
           <div className="card pulse-ring" style={{ marginBottom:10, border:'2px solid var(--pink)' }}>
             <div style={{ textAlign:'center', marginBottom:12 }}>
@@ -167,7 +161,6 @@ export default function DriverDashboard() {
           </div>
         )}
 
-        {/* Active ride */}
         {activeRide && (
           <div className="card" style={{ marginBottom:10, borderTop:'3px solid var(--green)' }}>
             <div style={{ fontWeight:700, marginBottom:10 }}>🚗 Active Ride</div>
@@ -186,7 +179,6 @@ export default function DriverDashboard() {
           </div>
         )}
 
-        {/* Earnings summary */}
         <div className="stat-grid" style={{ marginBottom:10 }}>
           <div className="stat-card green">
             <div className="stat-value">₹{earnings.today}</div>
@@ -198,7 +190,6 @@ export default function DriverDashboard() {
           </div>
         </div>
 
-        {/* Vehicle info */}
         <div className="card">
           <div style={{ display:'flex', alignItems:'center', gap:14 }}>
             <span style={{ fontSize:40 }}>{user?.vehicleType === 'auto' ? '🛺' : '🚗'}</span>
