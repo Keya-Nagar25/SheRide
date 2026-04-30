@@ -1,4 +1,3 @@
-// src/pages/driver/Verify.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
@@ -60,7 +59,6 @@ export default function DriverVerify() {
       <div className="header"><span className="header-title">Document Verification</span></div>
       <div style={{ padding: '16px' }}>
 
-        {/* Status banner */}
         <div className={`alert alert-${vstatus === 'rejected' ? 'error' : vstatus === 'approved' ? 'success' : 'warning'}`}>
           <span style={{ fontSize: 20 }}>{vstatus === 'approved' ? '✅' : vstatus === 'rejected' ? '❌' : '⏳'}</span>
           <div>
@@ -72,7 +70,6 @@ export default function DriverVerify() {
 
         {msg && <div className={`alert ${msg.includes('failed') || msg.includes('select') ? 'alert-error' : 'alert-success'}`}>{msg}</div>}
 
-        {/* Checklist */}
         <div className="card" style={{ marginBottom: 10 }}>
           <div style={{ fontWeight: 700, marginBottom: 10 }}>Required Documents</div>
           {[
@@ -91,7 +88,6 @@ export default function DriverVerify() {
           ))}
         </div>
 
-        {/* Upload Documents */}
         <div className="card" style={{ marginBottom: 10 }}>
           <div style={{ fontWeight: 700, marginBottom: 10 }}>Upload Documents</div>
           <div style={{ fontSize: 12, color: 'var(--text-3)', marginBottom: 12 }}>JPG · PNG · PDF — Max 5 MB each</div>
@@ -112,8 +108,6 @@ export default function DriverVerify() {
             {uploading ? 'Uploading…' : 'Upload Documents'}
           </button>
         </div>
-
-        {/* Upload Selfie */}
         <div className="card" style={{ marginBottom: 10 }}>
           <div style={{ fontWeight: 700, marginBottom: 6 }}>Selfie {docs.selfie ? '✓' : ''}</div>
           <div style={{ fontSize: 13, color: 'var(--text-2)', marginBottom: 12 }}>
