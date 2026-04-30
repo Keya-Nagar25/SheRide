@@ -1,13 +1,9 @@
-// services/fareService.js
-// Calculates ride fares for auto and car
-
-// Rate cards (in Indian Rupees)
 const rateCard = {
   auto: {
-    baseFare: 25,      // Starting charge
-    perKm:    17,       // Per kilometre
-    perMin:   1.5,     // Per minute
-    minFare:  30,      // Minimum you pay even for very short trips
+    baseFare: 25,      
+    perKm:    17,       
+    perMin:   1.5,     
+    minFare:  30,      
   },
   car: {
     baseFare: 50,
@@ -17,13 +13,6 @@ const rateCard = {
   },
 };
 
-/**
- * Calculate fare
- * @param {string} vehicleType - 'auto' or 'car'
- * @param {number} distanceKm  - distance in kilometres
- * @param {number} durationMin - estimated time in minutes
- * @returns {number} fare in rupees
- */
 const calcFare = (vehicleType, distanceKm, durationMin) => {
   const rate = rateCard[vehicleType];
   if (!rate) throw new Error('Invalid vehicle type');
@@ -32,9 +21,6 @@ const calcFare = (vehicleType, distanceKm, durationMin) => {
   return Math.max(Math.round(fare), rate.minFare);
 };
 
-/**
- * Get fare estimates for both vehicle types (shown on booking screen)
- */
 const getFareEstimates = (distanceKm, durationMin) => {
   return {
     auto: calcFare('auto', distanceKm, durationMin),
