@@ -1,4 +1,3 @@
-// routes/ratings.js
 const express = require('express');
 const router = express.Router();
 const Ride = require('../models/Ride');
@@ -7,10 +6,6 @@ const User = require('../models/User');
 const { Rating } = require('../models/Rating');
 const { protect } = require('../middlewares/auth');
 
-// ============================================
-// POST /api/ratings/:rideId
-// Submit a rating after a completed ride
-// ============================================
 router.post('/:rideId', protect, async (req, res) => {
   try {
     const { stars, comment } = req.body;
@@ -25,16 +20,13 @@ router.post('/:rideId', protect, async (req, res) => {
     let toUser, fromRole;
 
     if (req.user.role === 'passenger') {
-      // Passenger rates driver
       toUser = ride.driverId;
       fromRole = 'passenger';
     } else {
-      // Driver rates passenger
       toUser = ride.passengerId;
       fromRole = 'driver';
     }
 
-    // Prevent double-rating
     const existing = await Rating.findOne({
       rideId: ride._id,
       fromUser: req.user._id,
@@ -50,7 +42,6 @@ router.post('/:rideId', protect, async (req, res) => {
       comment,
     });
 
-    // Update the target's average rating
     if (fromRole === 'passenger') {
       const allRatings = await Rating.find({ toUser, fromRole: 'passenger' });
       const avg = allRatings.reduce((s, r) => s + r.stars, 0) / allRatings.length;
