@@ -1,16 +1,9 @@
-// routes/driver.js
-// Driver-specific actions after they are approved
-
 const express = require('express');
 const router = express.Router();
 const Driver = require('../models/Driver');
 const { Earning } = require('../models/Rating');
 const { protect, restrictTo } = require('../middlewares/auth');
 
-// ============================================
-// PUT /api/driver/toggle-online
-// Driver goes online or offline
-// ============================================
 router.put('/toggle-online', protect, restrictTo('driver'), async (req, res) => {
   try {
     const driver = await Driver.findById(req.user._id);
@@ -26,11 +19,6 @@ router.put('/toggle-online', protect, restrictTo('driver'), async (req, res) => 
   }
 });
 
-// ============================================
-// PUT /api/driver/location
-// Update driver's GPS coordinates
-// Body: { lat, lng }
-// ============================================
 router.put('/location', protect, restrictTo('driver'), async (req, res) => {
   try {
     const { lat, lng } = req.body;
@@ -39,7 +27,7 @@ router.put('/location', protect, restrictTo('driver'), async (req, res) => {
     await Driver.findByIdAndUpdate(req.user._id, {
       currentLocation: {
         type: 'Point',
-        coordinates: [parseFloat(lng), parseFloat(lat)], // MongoDB uses [lng, lat]
+        coordinates: [parseFloat(lng), parseFloat(lat)],
       },
     });
 
@@ -49,10 +37,6 @@ router.put('/location', protect, restrictTo('driver'), async (req, res) => {
   }
 });
 
-// ============================================
-// GET /api/driver/earnings
-// Driver's earnings dashboard
-// ============================================
 router.get('/earnings', protect, restrictTo('driver'), async (req, res) => {
   try {
     const driverId = req.user._id;
@@ -61,8 +45,6 @@ router.get('/earnings', protect, restrictTo('driver'), async (req, res) => {
       .sort({ createdAt: -1 });
 
     const total = earnings.reduce((sum, e) => sum + e.amount, 0);
-
-    // Today's earnings
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const todayEarnings = earnings
@@ -80,10 +62,6 @@ router.get('/earnings', protect, restrictTo('driver'), async (req, res) => {
   }
 });
 
-// ============================================
-// GET /api/driver/profile
-// Driver's own profile
-// ============================================
 router.get('/profile', protect, restrictTo('driver'), async (req, res) => {
   try {
     const driver = await Driver.findById(req.user._id).select('-password -otp -otpExpiry');
