@@ -1,6 +1,3 @@
-// routes/verify.js
-// Handles document uploads for drivers
-
 const express = require('express');
 const router = express.Router();
 const Driver = require('../models/Driver');
@@ -8,20 +5,14 @@ const User = require('../models/User');
 const { protect, protectDocUpload, restrictTo } = require('../middlewares/auth');
 const upload = require('../middlewares/upload');
 
-// ============================================
-// POST /api/verify/upload-docs
-// Driver uploads government ID + license + RC book
-// Uses multer to handle 3 files at once
-// Uses protectDocUpload to allow newly registered drivers
-// ============================================
 router.post(
   '/upload-docs',
   protectDocUpload,
   restrictTo('driver'),
   upload.fields([
-    { name: 'aadhaar', maxCount: 1 },   // ← was 'govId'
+    { name: 'aadhaar', maxCount: 1 },   
     { name: 'license', maxCount: 1 },
-    { name: 'selfie',  maxCount: 1 },   // ← was 'rcBook'
+    { name: 'selfie',  maxCount: 1 },   
   ]),
   async (req, res) => {
     try {
@@ -49,10 +40,6 @@ router.post(
   }
 );
 
-// ============================================
-// POST /api/verify/upload-selfie
-// Driver uploads selfie for face matching
-// ============================================
 router.post(
   '/upload-selfie',
   protectDocUpload,
@@ -74,9 +61,6 @@ router.post(
   }
 );
 
-// ============================================
-// POST /api/verify/upload-id  (for passengers - optional)
-// ============================================
 router.post(
   '/upload-id',
   protect,
@@ -98,10 +82,6 @@ router.post(
   }
 );
 
-// ============================================
-// GET /api/verify/status
-// Check verification status (for driver dashboard)
-// ============================================
 router.get('/status', protectDocUpload, restrictTo('driver'), async (req, res) => {
   try {
     const driver = await Driver.findById(req.user._id).select(
