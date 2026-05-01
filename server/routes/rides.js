@@ -1,6 +1,3 @@
-// routes/rides.js
-// All ride-related endpoints
-
 const express = require('express');
 const router = express.Router();
 const Ride = require('../models/Ride');
@@ -9,36 +6,25 @@ const { Earning } = require('../models/Rating');
 const { protect, restrictTo } = require('../middlewares/auth');
 const { calcFare, getFareEstimates } = require('../services/fareService');
 
-// ============================================
-// POST /api/rides/estimate
-// Get fare estimate before booking
-// Body: { pickupLat, pickupLng, dropLat, dropLng }
-// ============================================
 router.post('/estimate', protect, restrictTo('passenger'), async (req, res) => {
   try {
     const { pickupLat, pickupLng, dropLat, dropLng } = req.body;
 
-    // Simple distance calc using Haversine formula
     const distanceKm = getDistanceKm(pickupLat, pickupLng, dropLat, dropLng);
-    const durationMin = Math.round(distanceKm * 2.5); // Rough estimate: 2.5 min per km
+    const durationMin = Math.round(distanceKm * 2.5); 
 
     const estimates = getFareEstimates(distanceKm, durationMin);
 
     res.json({
       distanceKm: distanceKm.toFixed(2),
       durationMin,
-      estimates, // { auto: 120, car: 220 }
+      estimates, 
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-// ============================================
-// GET /api/rides/nearby-drivers
-// Find female drivers near the passenger's location
-// Query: ?lat=12.97&lng=77.59&vehicleType=auto&radius=5
-// ============================================
 router.get('/nearby-drivers', protect, restrictTo('passenger'), async (req, res) => {
   try {
     const { lat, lng, vehicleType, radius = 5 } = req.query;
@@ -53,7 +39,7 @@ router.get('/nearby-drivers', protect, restrictTo('passenger'), async (req, res)
       currentLocation: {
         $near: {
           $geometry: { type: 'Point', coordinates: [parseFloat(lng), parseFloat(lat)] },
-          $maxDistance: parseFloat(radius) * 1000, // Convert km to metres
+          $maxDistance: parseFloat(radius) * 1000, 
         },
       },
     }).select('name vehicleType vehicleNumber vehicleModel rating currentLocation');
@@ -64,10 +50,6 @@ router.get('/nearby-drivers', protect, restrictTo('passenger'), async (req, res)
   }
 });
 
-// ============================================
-// POST /api/rides/book
-// Book a ride
-// ============================================
 router.post('/book', protect, restrictTo('passenger'), async (req, res) => {
   try {
     const {
@@ -97,7 +79,6 @@ router.post('/book', protect, restrictTo('passenger'), async (req, res) => {
       status: 'pending',
     });
 
-    // Populate for response
     await ride.populate('passengerId', 'name phone rating');
 
     res.status(201).json({
@@ -109,10 +90,6 @@ router.post('/book', protect, restrictTo('passenger'), async (req, res) => {
   }
 });
 
-// ============================================
-// PUT /api/rides/:id/cancel
-// Passenger cancels a pending ride
-// ============================================
 router.put('/:id/cancel', protect, restrictTo('passenger'), async (req, res) => {
   try {
     const ride = await Ride.findById(req.params.id);
@@ -135,10 +112,6 @@ router.put('/:id/cancel', protect, restrictTo('passenger'), async (req, res) => 
   }
 });
 
-// ============================================
-// PUT /api/rides/:id/accept
-// Driver accepts a ride
-// ============================================
 router.put('/:id/accept', protect, restrictTo('driver'), async (req, res) => {
   try {
     const ride = await Ride.findById(req.params.id);
@@ -158,10 +131,6 @@ router.put('/:id/accept', protect, restrictTo('driver'), async (req, res) => {
   }
 });
 
-// ============================================
-// PUT /api/rides/:id/start
-// Driver starts the trip (passenger has been picked up)
-// ============================================
 router.put('/:id/start', protect, restrictTo('driver'), async (req, res) => {
   try {
     const ride = await Ride.findById(req.params.id);
@@ -181,10 +150,6 @@ router.put('/:id/start', protect, restrictTo('driver'), async (req, res) => {
   }
 });
 
-// ============================================
-// PUT /api/rides/:id/complete
-// Driver completes the trip
-// ============================================
 router.put('/:id/complete', protect, restrictTo('driver'), async (req, res) => {
   try {
     const ride = await Ride.findById(req.params.id);
@@ -199,8 +164,6 @@ router.put('/:id/complete', protect, restrictTo('driver'), async (req, res) => {
     ride.actualFare = ride.estimatedFare;
     ride.paymentStatus = 'paid';
     await ride.save();
-
-    // Record earnings for driver
     await Earning.create({
       driverId: ride.driverId,
       rideId: ride._id,
@@ -212,11 +175,6 @@ router.put('/:id/complete', protect, restrictTo('driver'), async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-
-// ============================================
-// GET /api/rides/history
-// Get past rides for passenger or driver
-// ============================================
 router.get('/history', protect, async (req, res) => {
   try {
     let query = {};
@@ -238,11 +196,6 @@ router.get('/history', protect, async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-
-// ============================================
-// GET /api/rides/:id
-// Get single ride details
-// ============================================
 router.get('/:id', protect, async (req, res) => {
   try {
     const ride = await Ride.findById(req.params.id)
@@ -257,9 +210,8 @@ router.get('/:id', protect, async (req, res) => {
   }
 });
 
-// ---- Helper: Haversine formula to get distance in km ----
 function getDistanceKm(lat1, lng1, lat2, lng2) {
-  const R = 6371; // Earth radius in km
+  const R = 6371; 
   const dLat = toRad(lat2 - lat1);
   const dLng = toRad(lng2 - lng1);
   const a =
