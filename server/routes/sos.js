@@ -1,5 +1,3 @@
-// routes/sos.js
-// Emergency SOS - sends SMS to emergency contacts
 
 const express = require('express');
 const router = express.Router();
@@ -8,12 +6,6 @@ const User = require('../models/User');
 const { protect, restrictTo } = require('../middlewares/auth');
 
 const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-
-// ============================================
-// POST /api/sos/trigger
-// Passenger triggers SOS - SMS sent to emergency contacts
-// Body: { lat, lng }
-// ============================================
 router.post('/trigger', protect, restrictTo('passenger'), async (req, res) => {
   try {
     const { lat, lng } = req.body;
@@ -27,15 +19,12 @@ router.post('/trigger', protect, restrictTo('passenger'), async (req, res) => {
 
     const mapsLink = `https://maps.google.com/?q=${lat},${lng}`;
     const message = `🚨 SOS ALERT from ${user.name}!\nShe may need help.\nLast known location: ${mapsLink}\nThis is an automated message from SheRide.`;
-
-    // In development, just log instead of sending SMS
     if (process.env.NODE_ENV !== 'production') {
       console.log('SOS MESSAGE:', message);
       console.log('Would send to:', user.emergencyContacts);
       return res.json({ message: 'SOS triggered (dev mode - SMS not sent)', contacts: user.emergencyContacts.length });
     }
 
-    // Send SMS to each emergency contact
     const sends = user.emergencyContacts.map((contact) =>
       client.messages.create({
         body: message,
@@ -53,12 +42,6 @@ router.post('/trigger', protect, restrictTo('passenger'), async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-
-// ============================================
-// PUT /api/sos/contacts
-// Add/update emergency contacts
-// Body: { contacts: [{ name, phone }] }
-// ============================================
 router.put('/contacts', protect, restrictTo('passenger'), async (req, res) => {
   try {
     const { contacts } = req.body;
