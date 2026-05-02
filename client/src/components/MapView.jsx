@@ -1,7 +1,3 @@
-// src/components/MapView.js
-// Reusable Google Maps component
-// Shows the map, pickup/drop markers, and draws the route
-
 import React, { useEffect, useRef, useCallback } from 'react';
 
 const MapView = ({
@@ -9,7 +5,7 @@ const MapView = ({
   dropLat, dropLng,
   driverLat, driverLng,
   height = '300px',
-  onMapClick,         // optional: called with { lat, lng } when user clicks
+  onMapClick,         
   showRoute = false,
 }) => {
   const mapRef = useRef(null);
@@ -29,7 +25,7 @@ const MapView = ({
 
     const center = pickupLat && pickupLng
       ? { lat: parseFloat(pickupLat), lng: parseFloat(pickupLng) }
-      : { lat: 18.5204, lng: 73.8567 }; // Default: Pune
+      : { lat: 18.5204, lng: 73.8567 }; 
 
     mapInstance.current = new window.google.maps.Map(mapRef.current, {
       center,
@@ -61,8 +57,6 @@ const MapView = ({
     clearMarkers();
 
     const bounds = new window.google.maps.LatLngBounds();
-
-    // Pickup marker (green circle)
     if (pickupLat && pickupLng) {
       const pos = { lat: parseFloat(pickupLat), lng: parseFloat(pickupLng) };
       const m = new window.google.maps.Marker({
@@ -81,8 +75,6 @@ const MapView = ({
       markersRef.current.push(m);
       bounds.extend(pos);
     }
-
-    // Drop marker (red pin)
     if (dropLat && dropLng) {
       const pos = { lat: parseFloat(dropLat), lng: parseFloat(dropLng) };
       const m = new window.google.maps.Marker({
@@ -101,8 +93,6 @@ const MapView = ({
       markersRef.current.push(m);
       bounds.extend(pos);
     }
-
-    // Driver marker (pink car)
     if (driverLat && driverLng) {
       const pos = { lat: parseFloat(driverLat), lng: parseFloat(driverLng) };
       if (driverMarkerRef.current) {
@@ -124,8 +114,6 @@ const MapView = ({
       }
       bounds.extend(pos);
     }
-
-    // Draw route between pickup and drop
     if (showRoute && pickupLat && pickupLng && dropLat && dropLng) {
       const ds = new window.google.maps.DirectionsService();
       const dr = new window.google.maps.DirectionsRenderer({
@@ -146,32 +134,23 @@ const MapView = ({
         }
       );
     }
-
-    // Fit bounds if we have 2+ points
     if (!bounds.isEmpty() && markersRef.current.length > 1) {
       mapInstance.current.fitBounds(bounds, { top: 60, right: 40, bottom: 40, left: 40 });
     }
   }, [pickupLat, pickupLng, dropLat, dropLng, driverLat, driverLng, showRoute]);
-
-  // Init map on mount
   useEffect(() => {
     if (window.google) {
       initMap();
     } else {
-      // Wait for Google Maps to load
       const interval = setInterval(() => {
         if (window.google) { clearInterval(interval); initMap(); }
       }, 300);
       return () => clearInterval(interval);
     }
   }, [initMap]);
-
-  // Update markers/route when props change
   useEffect(() => {
     if (mapInstance.current) drawMarkersAndRoute();
   }, [drawMarkersAndRoute]);
-
-  // If google maps not yet loaded, show placeholder
   if (!window.google) {
     return (
       <div className="map-placeholder" style={{ height }}>
