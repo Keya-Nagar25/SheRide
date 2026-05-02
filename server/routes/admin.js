@@ -1,6 +1,3 @@
-// routes/admin.js
-// Admin-only routes for managing the platform
-
 const express = require('express');
 const router = express.Router();
 const Driver = require('../models/Driver');
@@ -8,19 +5,12 @@ const User = require('../models/User');
 const Ride = require('../models/Ride');
 const { Earning } = require('../models/Rating');
 const { protect, restrictTo } = require('../middlewares/auth');
-
-// All admin routes require login + admin role
 router.use(protect, restrictTo('admin'));
-
-// ============================================
-// GET /api/admin/drivers/pending
-// Get all drivers waiting for approval
-// ============================================
 router.get('/drivers/pending', async (req, res) => {
   try {
     const drivers = await Driver.find({ verificationStatus: 'pending' })
       .select('-password -otp')
-      .sort({ createdAt: 1 }); // Oldest first (FIFO queue)
+      .sort({ createdAt: 1 }); 
 
     res.json({ drivers, count: drivers.length });
   } catch (error) {
@@ -28,11 +18,6 @@ router.get('/drivers/pending', async (req, res) => {
   }
 });
 
-// ============================================
-// GET /api/admin/drivers
-// Get all drivers with optional status filter
-// Query: ?status=approved&page=1
-// ============================================
 router.get('/drivers', async (req, res) => {
   try {
     const { status, page = 1, limit = 20 } = req.query;
@@ -49,10 +34,6 @@ router.get('/drivers', async (req, res) => {
   }
 });
 
-// ============================================
-// POST /api/admin/verify/:driverId/approve
-// Approve a driver
-// ============================================
 router.post('/verify/:driverId/approve', async (req, res) => {
   try {
     const driver = await Driver.findById(req.params.driverId);
@@ -62,20 +43,11 @@ router.post('/verify/:driverId/approve', async (req, res) => {
     driver.isVerified = true;
     driver.rejectionReason = null;
     await driver.save();
-
-    // TODO: Send approval SMS/notification to driver
-
     res.json({ message: `Driver ${driver.name} has been approved! 🌸`, driver });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
-
-// ============================================
-// POST /api/admin/verify/:driverId/reject
-// Reject a driver with a reason
-// Body: { reason }
-// ============================================
 router.post('/verify/:driverId/reject', async (req, res) => {
   try {
     const { reason } = req.body;
@@ -95,10 +67,6 @@ router.post('/verify/:driverId/reject', async (req, res) => {
   }
 });
 
-// ============================================
-// GET /api/admin/users
-// All passengers
-// ============================================
 router.get('/users', async (req, res) => {
   try {
     const { page = 1, limit = 20 } = req.query;
@@ -114,11 +82,6 @@ router.get('/users', async (req, res) => {
   }
 });
 
-// ============================================
-// PUT /api/admin/users/:id/suspend
-// Suspend a user (passenger or driver)
-// Body: { type: 'user' | 'driver' }
-// ============================================
 router.put('/users/:id/suspend', async (req, res) => {
   try {
     const { type = 'user' } = req.body;
@@ -141,10 +104,6 @@ router.put('/users/:id/suspend', async (req, res) => {
   }
 });
 
-// ============================================
-// GET /api/admin/rides
-// All rides with filters
-// ============================================
 router.get('/rides', async (req, res) => {
   try {
     const { status, page = 1, limit = 20 } = req.query;
@@ -164,10 +123,6 @@ router.get('/rides', async (req, res) => {
   }
 });
 
-// ============================================
-// GET /api/admin/reports
-// Summary stats for the dashboard
-// ============================================
 router.get('/reports', async (req, res) => {
   try {
     const [
