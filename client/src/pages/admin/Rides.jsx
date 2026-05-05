@@ -1,4 +1,3 @@
-// src/pages/admin/Rides.js
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
@@ -33,7 +32,6 @@ export default function AdminRides() {
         <span className="header-title">All Rides</span>
       </div>
 
-      {/* Filter scrollable row */}
       <div style={{ overflowX: 'auto', display: 'flex', gap: 8, padding: '10px 16px', borderBottom: '1px solid var(--border)', background: 'var(--bg)' }}>
         {FILTERS.map(f => (
           <button key={f.value} onClick={() => setFilter(f.value)}
