@@ -1,4 +1,3 @@
-// src/pages/admin/Dashboard.js
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
@@ -23,7 +22,6 @@ export default function AdminDashboard() {
       </div>
 
       <div style={{ padding: '16px' }}>
-        {/* Stats grid */}
         <p style={{ fontSize:12, color:'var(--text-3)', textTransform:'uppercase', letterSpacing:'0.07em', marginBottom:10 }}>Overview</p>
         <div className="stat-grid">
           <div className="stat-card pink">
@@ -43,8 +41,6 @@ export default function AdminDashboard() {
             <div className="stat-label">Trips Done</div>
           </div>
         </div>
-
-        {/* Revenue */}
         <div className="card" style={{ marginBottom:10, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
           <div>
             <div style={{ fontSize:12, color:'var(--text-3)', textTransform:'uppercase', letterSpacing:'0.07em' }}>Total Revenue</div>
@@ -52,8 +48,6 @@ export default function AdminDashboard() {
           </div>
           <span style={{ fontSize:40 }}>💰</span>
         </div>
-
-        {/* Quick actions */}
         <p style={{ fontSize:12, color:'var(--text-3)', textTransform:'uppercase', letterSpacing:'0.07em', marginBottom:10 }}>Actions</p>
         {[
           { to:'/admin/drivers', icon:'🪪', label:'Driver Approvals', sub:`${stats.drivers.pending} pending`, urgent: stats.drivers.pending > 0 },
