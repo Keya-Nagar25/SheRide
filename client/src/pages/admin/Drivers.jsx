@@ -1,4 +1,3 @@
-// src/pages/admin/Drivers.js
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
@@ -7,7 +6,7 @@ export default function AdminDrivers() {
   const [drivers, setDrivers] = useState([]);
   const [filter, setFilter] = useState('pending');
   const [loading, setLoading] = useState(true);
-  const [acting, setActing] = useState('');   // driverId being actioned
+  const [acting, setActing] = useState('');   
   const [rejectReason, setRejectReason] = useState('');
   const [rejectTarget, setRejectTarget] = useState(null);
 
@@ -56,7 +55,6 @@ export default function AdminDrivers() {
         <span className="header-title">Driver Verification</span>
       </div>
 
-      {/* Filter tabs */}
       <div style={{ display: 'flex', gap: 0, padding: '0 16px', borderBottom: '1px solid var(--border)', background: 'var(--bg)' }}>
         {FILTERS.map(f => (
           <button key={f} onClick={() => setFilter(f)}
@@ -65,8 +63,6 @@ export default function AdminDrivers() {
           </button>
         ))}
       </div>
-
-      {/* Reject modal overlay */}
       {rejectTarget && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', zIndex: 999, display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
           <div style={{ background: 'var(--bg-2)', borderRadius: '20px 20px 0 0', padding: 24, width: '100%', maxWidth: 430, border: '1px solid var(--border)' }}>
@@ -100,7 +96,6 @@ export default function AdminDrivers() {
 
         {drivers.map(d => (
           <div key={d._id} className="card" style={{ marginBottom: 10 }}>
-            {/* Driver header */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
               <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'var(--bg-3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, border: '2px solid var(--border-2)' }}>👩</div>
               <div style={{ flex: 1 }}>
@@ -112,8 +107,6 @@ export default function AdminDrivers() {
               </div>
               <span className={`badge badge-${d.verificationStatus}`}>{d.verificationStatus}</span>
             </div>
-
-            {/* Document links */}
             <div style={{ fontSize: 12, color: 'var(--text-3)', marginBottom: 6 }}>Documents uploaded:</div>
             <div className="doc-thumb">
               {d.govIdUrl && <a href={d.govIdUrl} target="_blank" rel="noreferrer">🪪 Gov ID</a>}
