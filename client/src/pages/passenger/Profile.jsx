@@ -1,4 +1,3 @@
-// src/pages/passenger/Profile.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
@@ -35,8 +34,6 @@ export default function Profile() {
     <div className="page" style={{ paddingBottom: 70 }}>
       <div className="header"><span className="header-title">Account</span></div>
       <div style={{ padding: '16px' }}>
-
-        {/* Profile hero */}
         <div className="card" style={{ textAlign: 'center', marginBottom: 10 }}>
           <div style={{ fontSize: 64, marginBottom: 8 }}>👩</div>
           <div style={{ fontSize: 22, fontWeight: 700 }}>{user?.name}</div>
@@ -57,8 +54,6 @@ export default function Profile() {
             </div>
           </div>
         </div>
-
-        {/* Optional ID upload */}
         <div className="card" style={{ marginBottom: 10 }}>
           <div style={{ fontWeight: 700, marginBottom: 4 }}>🛡️ Boost Trust Score</div>
           <div style={{ fontSize: 13, color: 'var(--text-2)', marginBottom: 12 }}>Upload Aadhar / Passport for a higher trust badge (optional)</div>
@@ -72,8 +67,6 @@ export default function Profile() {
             </button>
           )}
         </div>
-
-        {/* Emergency contacts */}
         <div className="card" style={{ marginBottom: 10 }}>
           <div style={{ fontWeight: 700, marginBottom: 12 }}>🚨 Emergency Contacts</div>
           <div style={{ fontSize: 13, color: 'var(--text-2)', marginBottom: 12 }}>Up to 3 contacts who receive SOS alerts</div>
@@ -97,8 +90,6 @@ export default function Profile() {
             {saved ? '✅ Saved!' : 'Save Contacts'}
           </button>
         </div>
-
-        {/* Logout */}
         <button className="btn btn-danger w-full" style={{ marginTop: 6 }} onClick={logout}>
           Sign Out
         </button>
