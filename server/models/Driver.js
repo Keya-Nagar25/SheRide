@@ -1,6 +1,3 @@
-// models/Driver.js
-// This represents a DRIVER in the database
-
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
@@ -26,8 +23,6 @@ const driverSchema = new mongoose.Schema(
       type: String,
       minlength: 6,
     },
-
-    // ---- Female verification fields (STRICT) ----
     gender: {
       type: String,
       enum: ['female'],
@@ -37,29 +32,25 @@ const driverSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-
-    // ---- Document uploads (required for driver approval) ----
     govIdUrl: {
-      type: String,           // Aadhar / PAN card
+      type: String,           
       default: null,
     },
     licenseUrl: {
-      type: String,           // Driving license
+      type: String,          
       default: null,
     },
     rcBookUrl: {
-      type: String,           // Vehicle registration certificate
+      type: String,           
       default: null,
     },
     selfieUrl: {
-      type: String,           // Selfie for face matching
+      type: String,           
       default: null,
     },
-
-    // ---- Vehicle details ----
     vehicleType: {
       type: String,
-      enum: ['auto', 'car'],  // Either auto-rickshaw or car
+      enum: ['auto', 'car'],  
       required: true,
     },
     vehicleNumber: {
@@ -70,15 +61,13 @@ const driverSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-
-    // ---- Account status ----
     role: {
       type: String,
       default: 'driver',
     },
     isVerified: {
       type: Boolean,
-      default: false,         // Stays false until admin approves
+      default: false,        
     },
     verificationStatus: {
       type: String,
@@ -87,14 +76,12 @@ const driverSchema = new mongoose.Schema(
     },
     rejectionReason: {
       type: String,
-      default: null,          // Admin fills this if rejected
+      default: null,          
     },
     isActive: {
       type: Boolean,
       default: true,
     },
-
-    // ---- Live location (updated every 3 seconds when online) ----
     isOnline: {
       type: Boolean,
       default: false,
@@ -106,26 +93,18 @@ const driverSchema = new mongoose.Schema(
         default: 'Point',
       },
       coordinates: {
-        type: [Number],        // [longitude, latitude]
+        type: [Number],        
         default: [0, 0],
       },
     },
-
-    // ---- OTP ----
     otp: { type: String, default: null },
     otpExpiry: { type: Date, default: null },
-
-    // ---- Ratings ----
     rating: { type: Number, default: 5.0 },
     totalRatings: { type: Number, default: 0 },
   },
   { timestamps: true }
 );
-
-// 2dsphere index enables location-based queries (find nearby drivers)
 driverSchema.index({ currentLocation: '2dsphere' });
-
-// Hash password before saving
 driverSchema.pre('save', async function (next) {
   if (!this.isModified('password') || !this.password) return next();
   this.password = await bcrypt.hash(this.password, 12);
