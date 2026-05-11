@@ -1,11 +1,10 @@
-// models/Rating.js
 const mongoose = require('mongoose');
 
 const ratingSchema = new mongoose.Schema(
   {
     rideId:   { type: mongoose.Schema.Types.ObjectId, ref: 'Ride', required: true },
-    fromUser: { type: mongoose.Schema.Types.ObjectId, required: true },   // who gave the rating
-    toUser:   { type: mongoose.Schema.Types.ObjectId, required: true },   // who received it
+    fromUser: { type: mongoose.Schema.Types.ObjectId, required: true },  
+    toUser:   { type: mongoose.Schema.Types.ObjectId, required: true },   
     fromRole: { type: String, enum: ['passenger', 'driver'] },
     stars:    { type: Number, min: 1, max: 5, required: true },
     comment:  { type: String, default: '' },
@@ -14,10 +13,6 @@ const ratingSchema = new mongoose.Schema(
 );
 
 const Rating = mongoose.model('Rating', ratingSchema);
-
-// ============================================
-
-// models/Earning.js
 const earningSchema = new mongoose.Schema(
   {
     driverId: { type: mongoose.Schema.Types.ObjectId, ref: 'Driver', required: true },
