@@ -1,11 +1,3 @@
-// src/pages/passenger/Book.js
-// FIXED: 
-//  - Step logic corrected (was starting at wrong step)
-//  - Google Places Autocomplete for real address search
-//  - Button works as soon as both locations are selected
-//  - Google Maps waits for the ready event before initialising
-//  - No more "enter lat,lng" — just type a real address
-
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../../services/api';
@@ -26,20 +18,16 @@ export default function Book() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const { socket } = useSocket();
-
-  // ---- Map refs ----
   const mapRef = useRef(null);
   const mapObj = useRef(null);
   const pickupMarker = useRef(null);
   const dropMarker = useRef(null);
   const routeRenderer = useRef(null);
-  const pickupInputRef = useRef(null);   // for Places Autocomplete
-  const dropInputRef = useRef(null);   // for Places Autocomplete
+  const pickupInputRef = useRef(null);   
+  const dropInputRef = useRef(null);   
   const pickupAutoRef = useRef(null);
   const dropAutoRef = useRef(null);
-
-  // ---- State ----
-  const [step, setStep] = useState('locations'); // 'locations' | 'vehicle'
+  const [step, setStep] = useState('locations'); 
   const [pickup, setPickup] = useState({ address: '', lat: null, lng: null });
   const [drop, setDrop] = useState({ address: '', lat: null, lng: null });
   const [vehicleType, setVehicleType] = useState(params.get('type') || '');
@@ -51,16 +39,12 @@ export default function Book() {
   const [gettingLoc, setGettingLoc] = useState(false);
   const [mapsReady, setMapsReady] = useState(!!window.googleMapsReady);
   const [error, setError] = useState('');
-
-  // ---- Wait for Google Maps to load ----
   useEffect(() => {
     if (window.googleMapsReady) { setMapsReady(true); return; }
     const handler = () => setMapsReady(true);
     window.addEventListener('google-maps-ready', handler);
     return () => window.removeEventListener('google-maps-ready', handler);
   }, []);
-
-  // ---- Init map once Maps is ready ----
   const initMap = useCallback((lat, lng) => {
     if (!mapRef.current || !window.google || mapObj.current) return;
     mapObj.current = new window.google.maps.Map(mapRef.current, {
@@ -75,20 +59,16 @@ export default function Book() {
     if (!mapsReady) return;
     navigator.geolocation?.getCurrentPosition(
       p => initMap(p.coords.latitude, p.coords.longitude),
-      () => initMap(18.5204, 73.8567)   // fallback: Pune
+      () => initMap(18.5204, 73.8567)   
     );
   }, [mapsReady, initMap]);
-
-  // ---- Attach Places Autocomplete to both inputs ----
   useEffect(() => {
     if (!mapsReady || !window.google) return;
 
     const options = {
-      componentRestrictions: { country: 'in' },   // restrict to India
+      componentRestrictions: { country: 'in' },   
       fields: ['formatted_address', 'geometry'],
     };
-
-    // Pickup autocomplete
     if (pickupInputRef.current && !pickupAutoRef.current) {
       pickupAutoRef.current = new window.google.maps.places.Autocomplete(
         pickupInputRef.current, options
@@ -99,12 +79,9 @@ export default function Book() {
         const lat = place.geometry.location.lat();
         const lng = place.geometry.location.lng();
         setPickup({ address: place.formatted_address, lat, lng });
-        // Move map to pickup location
         if (mapObj.current) mapObj.current.setCenter({ lat, lng });
       });
     }
-
-    // Drop autocomplete
     if (dropInputRef.current && !dropAutoRef.current) {
       dropAutoRef.current = new window.google.maps.places.Autocomplete(
         dropInputRef.current, options
@@ -117,13 +94,9 @@ export default function Book() {
         setDrop({ address: place.formatted_address, lat, lng });
       });
     }
-  }, [mapsReady, step]);  // re-attach when step changes (inputs re-render)
-
-  // ---- Update map markers whenever pickup/drop lat/lng changes ----
+  }, [mapsReady, step]);  
   useEffect(() => {
     if (!mapObj.current || !window.google) return;
-
-    // Pickup marker (green circle)
     if (pickup.lat && pickup.lng) {
       const pos = { lat: pickup.lat, lng: pickup.lng };
       if (pickupMarker.current) {
@@ -140,8 +113,6 @@ export default function Book() {
         });
       }
     }
-
-    // Drop marker (red arrow)
     if (drop.lat && drop.lng) {
       const pos = { lat: drop.lat, lng: drop.lng };
       if (dropMarker.current) {
@@ -158,11 +129,8 @@ export default function Book() {
         });
       }
     }
-
-    // Draw route between pickup and drop
     if (pickup.lat && pickup.lng && drop.lat && drop.lng) {
       const ds = new window.google.maps.DirectionsService();
-
       if (!routeRenderer.current) {
         routeRenderer.current = new window.google.maps.DirectionsRenderer({
           map: mapObj.current,
@@ -185,7 +153,6 @@ export default function Book() {
             const leg = result.routes[0].legs[0];
             setDistKm((leg.distance.value / 1000).toFixed(1));
             setDurationMin(Math.ceil(leg.duration.value / 60));
-            // Fit both markers on screen
             const bounds = new window.google.maps.LatLngBounds();
             bounds.extend({ lat: pickup.lat, lng: pickup.lng });
             bounds.extend({ lat: drop.lat, lng: drop.lng });
@@ -195,8 +162,6 @@ export default function Book() {
       );
     }
   }, [pickup.lat, pickup.lng, drop.lat, drop.lng]);
-
-  // ---- Get fare estimates whenever both locations are ready ----
   useEffect(() => {
     if (!pickup.lat || !drop.lat) return;
     api.post('/rides/estimate', {
@@ -205,20 +170,17 @@ export default function Book() {
     })
       .then(res => {
         setEstimates(res.data.estimates);
-        // Only override from API if Google Directions hasn't set these yet
         if (!distKm) setDistKm(res.data.distanceKm);
         if (!durationMin) setDurationMin(res.data.durationMin);
       })
       .catch(() => { });
   }, [pickup.lat, pickup.lng, drop.lat, drop.lng]);
 
-  // ---- Use device location for pickup ----
   const useMyLocation = () => {
     setGettingLoc(true);
     navigator.geolocation?.getCurrentPosition(
       pos => {
         const lat = pos.coords.latitude, lng = pos.coords.longitude;
-        // Reverse geocode to get a readable address
         if (window.google) {
           const geocoder = new window.google.maps.Geocoder();
           geocoder.geocode({ location: { lat, lng } }, (results, status) => {
@@ -238,7 +200,6 @@ export default function Book() {
     );
   };
 
-  // ---- Book the ride ----
   const handleBook = async () => {
     if (!vehicleType) { setError('Please tap Auto or Car to select your ride'); return; }
     setLoading(true); setError('');
@@ -269,22 +230,15 @@ export default function Book() {
       setLoading(false);
     }
   };
-
-  // ---- Both locations have lat/lng coords = we can proceed ----
   const bothLocationsSet = !!(pickup.lat && pickup.lng && drop.lat && drop.lng);
 
   return (
     <div className="page" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-
-      {/* ── MAP (top half) ── */}
       <div style={{ flex: 1, position: 'relative', minHeight: 240 }}>
-        {/* Map div */}
         <div
           ref={mapRef}
           style={{ width: '100%', height: '100%', background: '#1a1a1a' }}
         />
-
-        {/* Back button */}
         <button
           onClick={() => navigate('/passenger')}
           style={{
@@ -296,8 +250,6 @@ export default function Book() {
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}
         >←</button>
-
-        {/* ETA chip — only shown once route is drawn */}
         {distKm > 0 && (
           <div style={{
             position: 'absolute', bottom: 16, right: 16,
@@ -308,8 +260,6 @@ export default function Book() {
             <div style={{ fontSize: 10, color: 'var(--text-3)', textTransform: 'uppercase' }}>MIN</div>
           </div>
         )}
-
-        {/* "Maps loading…" overlay */}
         {!mapsReady && (
           <div style={{
             position: 'absolute', inset: 0, background: '#1a1a1a',
@@ -321,12 +271,8 @@ export default function Book() {
           </div>
         )}
       </div>
-
-      {/* ── BOTTOM SHEET ── */}
       <div className="bottom-sheet" style={{ maxHeight: '62vh', overflowY: 'auto' }}>
         <div className="sheet-handle" />
-
-        {/* ════ STEP 1: Enter locations ════ */}
         {step === 'locations' && (
           <>
             <h2 className="sheet-title">Where to?</h2>
@@ -334,21 +280,13 @@ export default function Book() {
             {error && (
               <div className="alert alert-error" style={{ marginBottom: 12 }}>⚠ {error}</div>
             )}
-
-            {/* Location row — green dot → red dot with line between */}
             <div style={{ display: 'flex', alignItems: 'stretch', gap: 12, marginBottom: 12 }}>
-
-              {/* Dot + line indicator */}
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 14, paddingBottom: 14, gap: 0 }}>
                 <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#4caf50', flexShrink: 0 }} />
                 <div style={{ width: 2, flex: 1, background: 'var(--border-2)', minHeight: 20 }} />
                 <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#f44336', flexShrink: 0 }} />
               </div>
-
-              {/* Two address inputs */}
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 8 }}>
-
-                {/* Pickup input with Places Autocomplete */}
                 <div style={{
                   background: 'var(--bg-3)', border: `1.5px solid ${pickup.lat ? '#4caf50' : 'var(--border)'}`,
                   borderRadius: 10, padding: '12px 14px',
@@ -371,8 +309,6 @@ export default function Book() {
                     <div style={{ fontSize: 11, color: '#4caf50', marginTop: 3 }}>✓ Location set</div>
                   )}
                 </div>
-
-                {/* Drop input with Places Autocomplete */}
                 <div style={{
                   background: 'var(--bg-3)', border: `1.5px solid ${drop.lat ? '#f44336' : 'var(--border)'}`,
                   borderRadius: 10, padding: '12px 14px',
@@ -397,8 +333,6 @@ export default function Book() {
                 </div>
               </div>
             </div>
-
-            {/* Use my current location button */}
             <button
               style={{
                 width: '100%', padding: '11px 16px',
@@ -413,8 +347,6 @@ export default function Book() {
               <span style={{ fontSize: 20 }}>📍</span>
               {gettingLoc ? 'Getting your location…' : 'Use my current location for pickup'}
             </button>
-
-            {/* Hint when locations not set yet */}
             {!bothLocationsSet && (
               <div style={{
                 textAlign: 'center', fontSize: 13, color: 'var(--text-3)',
@@ -427,8 +359,6 @@ export default function Book() {
                     : '⬆ Set your drop-off location'}
               </div>
             )}
-
-            {/* See ride options button — always visible, enabled only when both locations set */}
             <button
               className={`btn ${bothLocationsSet ? 'btn-white' : 'btn-ghost'}`}
               onClick={() => {
@@ -443,19 +373,16 @@ export default function Book() {
                 setError('');
                 setStep('vehicle');
               }}
-              style={{ opacity: 1 }}  /* never visually disabled — shows error instead */
+              style={{ opacity: 1 }}  
             >
               {bothLocationsSet ? 'See ride options →' : 'Enter both locations to continue'}
             </button>
           </>
         )}
 
-        {/* ════ STEP 2: Choose vehicle ════ */}
         {step === 'vehicle' && (
           <>
             <h2 className="sheet-title">Choose a trip</h2>
-
-            {/* Distance / duration summary */}
             <div style={{ textAlign: 'center', fontSize: 13, color: 'var(--text-2)', marginBottom: 14 }}>
               {distKm} km · ~{durationMin} min
             </div>
@@ -463,8 +390,6 @@ export default function Book() {
             {error && (
               <div className="alert alert-error" style={{ marginBottom: 12 }}>⚠ {error}</div>
             )}
-
-            {/* Vehicle rows — Auto and Car */}
             {[
               { type: 'auto', icon: '🛺', name: 'Auto', sub: `${durationMin} min · 3 seats`, badge: 'Faster' },
               { type: 'car', icon: '🚗', name: 'Car', sub: `${durationMin + 4} min · 4 seats · AC` },
@@ -485,8 +410,6 @@ export default function Book() {
                 </div>
               </div>
             ))}
-
-            {/* Payment method row */}
             <div style={{
               display: 'flex', alignItems: 'center', gap: 12,
               padding: '14px 0', borderTop: '1px solid var(--border)', marginTop: 12,
@@ -507,8 +430,6 @@ export default function Book() {
                 Switch →
               </button>
             </div>
-
-            {/* Book button */}
             <button
               className="btn btn-white"
               disabled={!vehicleType || loading}
@@ -521,8 +442,6 @@ export default function Book() {
                   ? `Choose ${vehicleType === 'auto' ? '🛺 Auto' : '🚗 Car'}`
                   : 'Select Auto or Car above'}
             </button>
-
-            {/* Back to location step */}
             <button
               className="btn btn-ghost"
               onClick={() => setStep('locations')}
