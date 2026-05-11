@@ -1,11 +1,6 @@
-// middlewares/upload.js
-// Handles file uploads → saves them to Cloudinary
-
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('../config/cloudinary');
-
-// Store files in Cloudinary under the 'sheride/docs' folder
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
@@ -14,8 +9,6 @@ const storage = new CloudinaryStorage({
     resource_type: 'auto',
   },
 });
-
-// Only allow image and PDF files, max 5MB
 const fileFilter = (req, file, cb) => {
   const allowed = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
   if (allowed.includes(file.mimetype)) {
@@ -28,7 +21,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB max
+  limits: { fileSize: 5 * 1024 * 1024 }, 
 });
 
 module.exports = upload;
