@@ -39,44 +39,32 @@ const protect = async (req, res, next) => {
     if (!user.isActive) {
       return res.status(403).json({ message: 'Your account has been suspended. Contact support.' });
     }
-
-    // 5. Check user is verified
     if (!user.isVerified) {
       return res.status(403).json({
         message: 'Your account is not yet verified.',
         verificationStatus: user.verificationStatus || 'pending',
       });
     }
-
-    // 6. Attach user to request so routes can use it
     req.user = user;
     next();
   } catch (error) {
     res.status(500).json({ message: 'Auth error: ' + error.message });
   }
 };
-
-// ---- protectDocUpload: allows newly registered users to upload docs ----
-// Like protect, but skips isVerified check (since docs are HOW users get verified)
 const protectDocUpload = async (req, res, next) => {
   try {
-    // 1. Get token from header
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({ message: 'No token. Please log in.' });
     }
 
     const token = authHeader.split(' ')[1];
-
-    // 2. Verify the token is real and not expired
     let decoded;
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET);
     } catch (err) {
       return res.status(401).json({ message: 'Token is invalid or expired. Please log in again.' });
     }
-
-    // 3. Find the user
     let user = await User.findById(decoded.id).select('-password -otp');
     if (!user) {
       user = await Driver.findById(decoded.id).select('-password -otp');
@@ -91,16 +79,9 @@ const protectDocUpload = async (req, res, next) => {
     if (!user) {
       return res.status(401).json({ message: 'User not found.' });
     }
-
-    // 4. Check account is active
     if (!user.isActive) {
       return res.status(403).json({ message: 'Your account has been suspended. Contact support.' });
     }
-
-    // NOTE: isVerified check is intentionally skipped —
-    // document upload IS the verification process for new drivers!
-
-    // 5. Attach user to request
     req.user = user;
     next();
   } catch (error) {
@@ -108,8 +89,6 @@ const protectDocUpload = async (req, res, next) => {
   }
 };
 
-// ---- restrictTo: checks role ----
-// Usage: restrictTo('admin') or restrictTo('driver') or restrictTo('passenger', 'admin')
 const restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
